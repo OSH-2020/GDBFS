@@ -3,9 +3,6 @@ from py2neo import *
 from py2neo.ogm import *
 import os
 import time
-import pprint
-import numpy as np
-import pandas as pd
 import logging
 
 
@@ -90,12 +87,12 @@ class FileNode:
 
 
 def main():
-    print('The version of your py2neo is: {}'.format(py2neo.__version__))
     logging.basicConfig(format='%(asctime)s - : %(message)s',
                         level=logging.INFO)
+    logging.info('The version of your py2neo is: {}'.format(py2neo.__version__))
     # Connect to the database
-    db = Database("bolt://localhost:7687")
-    logging.info('Connected to a database.\nURI: {}, name: {}:'.format(db.uri, db.name))
+    # db = Database("bolt://localhost:7687")
+    # logging.info('Connected to a database.\nURI: {}, name: {}:'.format(db.uri, db.name))
     # Return the graph from the database
     g = Graph("bolt://localhost:7687")
     logging.info('Connected to a graph:\n{}'.format(g))
