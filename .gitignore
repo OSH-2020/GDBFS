@@ -1,2 +1,12 @@
-﻿GDBFS/*
+﻿.vscode
+GDBFS/*
 !GDBFS/neobase.py
+!GDBFS/UsrInputConv.py
+!GDBFS/api-extension
+GDBFS/api-extension/*
+!GDBFS/api-extension/yake_api
+GDBFS/api-extension/yake_api/*
+!GDBFS/api-extension/yake_api/yake_api.py
+!GDBFS/api-extension/api_top.py
+!GDBFS/api-extension/onestep.sh
+!GDBFS/api-extension/README.md
