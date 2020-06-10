@@ -7,7 +7,7 @@ import json
 # 目前该函数返回的置信系数时乱序的
 def keyword_yake_api(filepath):
 	# 选择 state = 0 离线api，state = 1 使用在线api
-	state = 1
+	state = 0
 	with open(filepath, 'r', encoding='utf-8') as f:
 		text = f.read()
 		

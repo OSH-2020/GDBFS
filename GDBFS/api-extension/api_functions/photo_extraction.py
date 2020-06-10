@@ -3,7 +3,7 @@ import base64
 from urllib import request
 import ssl
 import json
-from .translate_api.translate_api import translate_iciba_api
+from translate_api import translate_iciba_api
 
 
 # 通用物体和场景识别
