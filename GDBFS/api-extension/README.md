@@ -2,7 +2,7 @@
 您可以使用`./onestep.sh`来执行一键安装一部分所需要的库，如果其中有出错，请移步Google
 ## Note for api_top
 ### 调用方法
-```python
+```shell script
 python3 api_top.py <filepath>
 #示例
 #在/usr/local下有一个text.txt文件

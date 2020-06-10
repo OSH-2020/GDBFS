@@ -16,4 +16,5 @@ GDBFS/api-extension/baiducloud_api/*
 !GDBFS/api-extension/baiducloud_api/translate_api
 GDBFS/api-extension/baiducloud_api/translate_api/*
 !GDBFS/api-extension/baiducloud_api/translate_api/translate_api.py
+!GDBFS/api-extension/baiducloud_api/translate_api/key.txt
 
