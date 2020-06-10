@@ -10,3 +10,10 @@ GDBFS/api-extension/yake_api/*
 !GDBFS/api-extension/api_top.py
 !GDBFS/api-extension/onestep.sh
 !GDBFS/api-extension/README.md
+!GDBFS/api-extension/baiducloud_api
+GDBFS/api-extension/baiducloud_api/*
+!GDBFS/api-extension/baiducloud_api/photo_extraction.py
+!GDBFS/api-extension/translate_api
+GDBFS/api-extension/translate_api/*
+!GDBFS/api-extension/translate_api/translate_api.py
+
