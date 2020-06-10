@@ -15,7 +15,7 @@ def keyword_photo_extract(filepath):
         img = base64.b64encode(f.read())
 
         # 发送API请求
-        params = {"image":img}
+        params = {"image": img}
         access_token = get_token()
         request_url = request_url + "?access_token=" + access_token
         headers = {'content-type': 'application/x-www-form-urlencoded'}
@@ -46,6 +46,7 @@ def get_token():
     key_file = open('key.txt', 'r')
     API_Key = key_file.readline().strip(' \t\n')
     Secret_Key = key_file.readline().strip(' \t\n')
+    key_file.close()
     host = 'https://aip.baidubce.com/oauth/2.0/token?grant_' \
         'type=client_credentials&client_id='+API_Key +\
         '&client_secret=' + Secret_Key
