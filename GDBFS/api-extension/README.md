@@ -33,7 +33,7 @@ yake是一个用于关键词提取(keyword extraction)的API
 
 ## Note for baiducloud_api
 百度图像识别是一个拥有'通用物体和场景识别'的API，通过上传图片，可以识别出物体所属的类别和名称  
-要使用该图像识别API，你需要在[百度AI平台](https://ai.baidu.com/)中注册，并获取API Key和Secret Key，填入photo_extraction.py中get_token()函数中相应位置  
+要使用该图像识别API，你需要在[百度AI平台](https://ai.baidu.com/)中注册，并获取API Key和Secret Key，并在photo_extraction.py同级目录下建立`key.txt`，第一行为API Key，第二行为Secret Key.
 
 <font color=red size=3>**Attention**</font>  
 所上传图片需要满足:  
