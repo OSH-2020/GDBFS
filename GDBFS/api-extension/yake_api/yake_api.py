@@ -4,6 +4,7 @@ import requests
 import json
 # TODO:目前只支持txt文件的提取，未来可以增加doc，docx等文件的提取
 # TODO: 把该函数改为class形式，并取消state参数设置，通过上层函数调用不同的对象函数来控制online api或offline api
+# 目前该函数返回的置信系数时乱序的
 def keyword_yake_api(filepath):
 	# 选择 state = 0 离线api，state = 1 使用在线api
 	state = 1
