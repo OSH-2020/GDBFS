@@ -20,7 +20,7 @@ def keyword_photo_extract(filepath):
         request_url = request_url + "?access_token=" + access_token
         headers = {'content-type': 'application/x-www-form-urlencoded'}
         response = requests.post(request_url, data=params, headers=headers)
-        
+
         # 格式转换
         result_dictType = json.loads(response.text)
         length = result_dictType['result_num']
