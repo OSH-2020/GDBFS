@@ -42,15 +42,25 @@ def keyword_photo_extract(filepath):
 
 # 调取百度接口需要注册账号的access token，token需要使用API key和Secret Key获取
 def get_token():
-    gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-    key_file = open('key.txt', 'r')
-    API_Key = key_file.readline().strip(' \t\n')
-    Secret_Key = key_file.readline().strip(' \t\n')
-    key_file.close()
-    host = 'https://aip.baidubce.com/oauth/2.0/token?grant_' \
-        'type=client_credentials&client_id='+API_Key +\
-        '&client_secret=' + Secret_Key
-    req = request.Request(host)
-    response = request.urlopen(req, context=gcontext).read().decode('UTF-8')
-    result = json.loads(response)
-    return result['access_token']
+    try:
+        # 如果有token文件，则优先使用token，从而不用多次调用获取token的接口
+        with open('token.txt', 'r', encoding='utf-8') as f:
+            token = f.readline().strip(' \t\n')
+    except:
+        # 如果没有token文件，则使用key获取token并保存
+        gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+        key_file = open('key.txt', 'r', encoding='utf-8')
+        API_Key = key_file.readline().strip(' \t\n')
+        Secret_Key = key_file.readline().strip(' \t\n')
+        key_file.close()
+        host = 'https://aip.baidubce.com/oauth/2.0/token?grant_' \
+            'type=client_credentials&client_id='+API_Key +\
+            '&client_secret=' + Secret_Key
+        req = request.Request(host)
+        response = request.urlopen(req, context=gcontext).read().decode('UTF-8')
+        result = json.loads(response)
+        token = result['access_token']
+        with open('token.txt', 'w', encoding='utf-8') as f:
+            f.write(token)
+
+    return token
