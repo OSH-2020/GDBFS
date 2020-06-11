@@ -11,10 +11,14 @@ class FileNode:
 
     def __init__(self, file_path, keywords=None, label="File", other_properties=None):
         """
-        :param file_path: The file path
+        :param file_path: The full path of the file.
+        :type file_path: str
         :param keywords: The keywords.
+        :type keywords: list(str)
         :param label: The label for this node. 'File' by default
-        :param other_properties: The other properties need to be specified. None by default
+        :type label: str
+        :param other_properties: A dict indicating the other properties needed to be specified. None by default
+        :type other_properties: dict
         """
         self.file_path = file_path
         self.keywords = keywords
@@ -24,6 +28,7 @@ class FileNode:
     def merge_into(self, graph):
         """
         :param graph: The graph which the nodes and relationships to be merged into.
+        :type graph: py2neo.database.Graph
         """
         graph.merge(self.node, 'File', 'name')
         graph.merge(self.keyword_nodes, 'Keyword', 'name')
@@ -32,10 +37,10 @@ class FileNode:
     @property
     def get_subgraph(self):
         """
-        :return:
-            subgraph: The subgraph of keywords nodes, file node
-                and the corresponding relationships
-            Subgraph(keyword_nodes): The keyword_nodes as the class 'Subgraph'
+        :return subgraph: The subgraph of keywords nodes, file node and the corresponding relationships
+        :rtype subgraph: py2neo.data.Subgraph
+        :return Subgraph(keyword_nodes): The keyword_nodes as the class 'Subgraph'
+        :rtype Subgraph(keyword_nodes): py2neo.data.Subgraph
         """
         subgraph = self.node
         if not self.keywords:
@@ -50,10 +55,14 @@ class FileNode:
     @staticmethod
     def file_to_node(file_path, label='File', other_properties=None):
         """
-        :param file_path: The file path.
+        :param file_path: The full path of the file.
+        :type file_path: str
         :param label: The label for this node. 'File' by default
-        :param other_properties: The other properties need to be specified. None by default
-        :return: The node of the file.
+        :type label: str
+        :param other_properties: A dict indicating the other properties need to be specified. None by default
+        :type other_properties: dict
+        :return node: The node of the file.
+        :rtype node: py2neo.data.Node
         """
         if other_properties is None:
             other_properties = {}
@@ -65,7 +74,8 @@ class FileNode:
     @staticmethod
     def get_property(file_path):
         """
-        :param file_path: The file path (including the file name).
+        :param file_path: The full path of the file.
+        :type file_path: str
         :return: A dict for the properties of the file.
         :references:
             os: https://www.runoob.com/python/os-file-methods.html
