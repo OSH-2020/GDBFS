@@ -3,7 +3,7 @@ import base64
 from urllib import request
 import ssl
 import json
-from translate_api import translate_iciba_api
+from .translate_api import translate_iciba_api
 
 
 # 通用物体和场景识别
@@ -44,12 +44,13 @@ def keyword_photo_extract(filepath):
 def get_token():
     try:
         # 如果有token文件，则优先使用token，从而不用多次调用获取token的接口
-        with open('token.txt', 'r', encoding='utf-8') as f:
+        with open('api_functions/token.txt', 'r', encoding='utf-8') as f:
             token = f.readline().strip(' \t\n')
-    except:
+    except OSError:
         # 如果没有token文件，则使用key获取token并保存
         gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-        key_file = open('key.txt', 'r', encoding='utf-8')
+        # TODO:解决文件相对路径的巨坑
+        key_file = open('api_functions/key.txt', 'r', encoding='utf-8')
         API_Key = key_file.readline().strip(' \t\n')
         Secret_Key = key_file.readline().strip(' \t\n')
         key_file.close()
@@ -60,7 +61,6 @@ def get_token():
         response = request.urlopen(req, context=gcontext).read().decode('UTF-8')
         result = json.loads(response)
         token = result['access_token']
-        with open('token.txt', 'w', encoding='utf-8') as f:
+        with open('api_functions/token.txt', 'w', encoding='utf-8') as f:
             f.write(token)
-
     return token

@@ -1,5 +1,9 @@
 # Notes for API
 您可以使用`./onestep.sh`来执行一键安装一部分所需要的库，如果其中有出错，请移步Google
+# 巨坑警告
+例如直接api_functions文件夹中调用api_functions/photo_extraction.py文件中的函数，该文件中的key和token路径应该写为'key.txt','token.txt'，但是如果从api_extension中的api_top.py中调用，那么路径应该写为'api_functions/xxxx.txt'  
+目前还没有找到解决方案，或许需要从顶层文件中传入  
+问题描述详见https://blog.csdn.net/ljl6158999/article/details/78657799  
 ## Note for api_top
 ### 调用方法
 ```python
@@ -23,10 +27,10 @@ exifread
 geopy  
 time  
 
-
-
 <font color=red size=3>**Attention**</font>  
-**该函数目前为半成品函数，理想返回值应该为关键字列表**  
+该函数目前能实现对txt、jpeg、jpg、bmp、png的关键字提取，以及其他文件的属性提取  
+该函数不会返回None，keywords只会返回空列表，file_information返回值见file_information_extractor的说明  
+TODO:有人会md文件内标题的超链接吗，把file_information_extractor链接到下面的Note for file_information_extractor标题上吧）
 
 ## Note for yake
 yake是一个用于关键词提取(keyword extraction)的API  
@@ -54,7 +58,7 @@ yake是一个用于关键词提取(keyword extraction)的API
 `http://dict-co.iciba.com/search.php?word=你好`  
 即可获取’你好‘对应的英文
 
-## Note for file_information_extraction
+## Note for file_information_extractor
 该函数用于解析文件的"大小，创建时间，修改时间，访问时间，(照片)拍摄地点”  
 返回值为dict  
 {  
