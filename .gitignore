@@ -1,5 +1,6 @@
 ﻿.vscode
 GDBFS/*
+!GDBFS/README.md
 !GDBFS/neobase.py
 !GDBFS/UsrInputConv.py
 !GDBFS/api-extension
