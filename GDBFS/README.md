@@ -50,8 +50,8 @@
 python test.py "a movie about Tom Smith and Jack in USTC" --ctime "in September last year"
 //output
 keywords:  ['movie', 'Tom Smith', 'Jack', 'USTC']
-atime:     ['2017-06-12T00:00:00 - 2020-06-12T23:01:50']
-ctime:     ['2019-09-01T00:00:00 - 2019-09-30T23:59:59']
-mtime:     ['2017-06-12T00:00:00 - 2020-06-12T23:01:50']
+atime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
+ctime:     [('2019-09-01T00:00:00', '2019-09-30T23:59:59')]
+mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 
 ```
