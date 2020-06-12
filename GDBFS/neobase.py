@@ -103,12 +103,28 @@ def get_files(graph: Graph, keywords: list, file_properties: dict) -> list:
     :param file_properties:
     :return files: The list of files' property
     """
+    def time_cypher_repr(span):
+        begin = 'DATETIME(f.cTime) >= DATETIME("{}")'.format(span[0]) if span[0] is not None else 'TRUE'
+        end = 'DATETIME(f.cTime) <= DATETIME("{}")'.format(span[1]) if span[1] is not None else 'TRUE'
+        return begin + ' AND ' + end
+
+    cTime_constrain = [time_cypher_repr(span) for span in file_properties['cTime']] if 'cTime' in file_properties else []
+    cTime_constrain_cypher = (' AND ' + '({})'.format(' OR '.join(cTime_constrain))) if cTime_constrain != [] else ''
+    aTime_constrain = [time_cypher_repr(span) for span in file_properties['aTime']] if 'aTime' in file_properties else []
+    aTime_constrain_cypher = (' AND ' + '({})'.format(' OR '.join(aTime_constrain))) if aTime_constrain != [] else ''
+    mTime_constrain = [time_cypher_repr(span) for span in file_properties['mTime']] if 'mTime' in file_properties else []
+    mTime_constrain_cypher = (' AND ' + '({})'.format(' OR '.join(mTime_constrain))) if mTime_constrain != [] else ''
+    constrain_cypher = cTime_constrain_cypher + aTime_constrain_cypher + mTime_constrain_cypher
+
     cypher = """
-MATCH (f:File {file_properties})-->(kw:Keyword)
-WHERE kw.name in {keywords}
+MATCH (f:File)-->(kw:Keyword)
+WHERE kw.name in {keywords} {other_constrain}
 RETURN DISTINCT f""".format(keywords=cypher_repr(keywords),
-                            file_properties=cypher_repr(file_properties))
+                            other_constrain=constrain_cypher)
+    print(cypher)
     files = graph.run(cypher)
+    import pprint
+    pprint.pprint(files.data())
     return files
 
 
@@ -125,15 +141,10 @@ def main():
     # Here is a sample for FileNode
     n = FileNode(r'neobase.py', keywords=['cypher', 'neo4j'])
     n.merge_into(g)
-    cypher = """
-MATCH (f:File {file_properties})-->(kw:Keyword)
-WHERE kw.name in {keywords}
-RETURN DISTINCT f""".format(keywords=cypher_repr(['cypher', 'neo4j']),
-                            file_properties=cypher_repr({'name': 'neobase.py'}))
-    get = g.run(cypher)
-    print(cypher)
-    import pprint
-    pprint.pprint(get.data())
+
+    get_files(g, keywords=['cypher', 'neo4j'], file_properties={'cTime': [('2020-06-10', '2020-06-20')]})
+    # get = g.run(cypher)
+
 
 if __name__ == "__main__":
     main()
