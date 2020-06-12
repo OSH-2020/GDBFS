@@ -96,6 +96,22 @@ class FileNode:
         return properties
 
 
+def get_files(graph: Graph, keywords: list, file_properties: dict) -> list:
+    """
+    :param graph: The Graph from the database
+    :param keywords: The associated keywords
+    :param file_properties:
+    :return files: The list of files' property
+    """
+    cypher = """
+MATCH (f:File {file_properties})-->(kw:Keyword)
+WHERE kw.name in {keywords}
+RETURN DISTINCT f""".format(keywords=cypher_repr(keywords),
+                            file_properties=cypher_repr(file_properties))
+    files = graph.run(cypher)
+    return files
+
+
 def main():
     logging.basicConfig(format='%(asctime)s - : %(message)s',
                         level=logging.INFO)
@@ -109,7 +125,15 @@ def main():
     # Here is a sample for FileNode
     n = FileNode(r'neobase.py', keywords=['cypher', 'neo4j'])
     n.merge_into(g)
-
+    cypher = """
+MATCH (f:File {file_properties})-->(kw:Keyword)
+WHERE kw.name in {keywords}
+RETURN DISTINCT f""".format(keywords=cypher_repr(['cypher', 'neo4j']),
+                            file_properties=cypher_repr({'name': 'neobase.py'}))
+    get = g.run(cypher)
+    print(cypher)
+    import pprint
+    pprint.pprint(get.data())
 
 if __name__ == "__main__":
     main()
