@@ -7,7 +7,7 @@
 from api_functions import api_top
 result = api_top.get_keywords_properties(<filepath>)
 # 示例
-# 在/usr/local下有一个text.txt文件
+# 在/home/ubuntu/下有一个text.txt文件
 # 建议不管文件在何处，都要填完整路径
 >>> from GDBFS.api_extension import api_top
 >>> api_top.get_keywords_properties('/home/ubuntu/test.txt')
@@ -70,6 +70,7 @@ yake是一个用于关键词提取(keyword extraction)的API
  'file_create_location': location  
  }  
 当里面任意一个信息获取失败的时候，相应字典的值为None  
+获取file_create_location时需要保证网络正常，有可能因为网络原因获取失败  
 
 ### 调用示例
 ```python

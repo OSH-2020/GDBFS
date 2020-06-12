@@ -11,8 +11,8 @@ def get_keywords_properties(filepath):
     filename_extension = filepath.split('.')[-1].lower()
     file_information = get_file_information(filepath)
     # print(filename_extension)
-    if filename_extension == 'txt':
-        keywords_yake = keyword_yake_api(filepath)
+    if (filename_extension == 'txt') or (filename_extension == 'docx'):
+        keywords_yake = keyword_yake_api(filepath, filename_extension)
         # print(keywords_yake)
     else:
         keywords_yake = {}
