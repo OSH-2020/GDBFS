@@ -8,9 +8,11 @@ GDBFS/api_extension/*
 !GDBFS/api_extension/api_top.py
 !GDBFS/api_extension/onestep.sh
 !GDBFS/api_extension/README.md
+!GDBFS/api_extension/__init__.py
 !GDBFS/api_extension/api_functions
 GDBFS/api_extension/api_functions/*
 !GDBFS/api_extension/api_functions/yake_api.py
 !GDBFS/api_extension/api_functions/photo_extraction.py
 !GDBFS/api_extension/api_functions/translate_api.py
 !GDBFS/api_extension/api_functions/file_information_extractor.py
+!GDBFS/api_extension/api_functions/__init__.py
