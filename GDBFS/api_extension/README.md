@@ -1,17 +1,18 @@
 # Notes for API
 您可以使用`./onestep.sh`来执行一键安装一部分所需要的库，如果其中有出错，请移步Google
-# 巨坑警告
-例如直接api_functions文件夹中调用api_functions/photo_extraction.py文件中的函数，该文件中的key和token路径应该写为'key.txt','token.txt'，但是如果从api_extension中的api_top.py中调用，那么路径应该写为'api_functions/xxxx.txt'  
-目前还没有找到解决方案，或许需要从顶层文件中传入  
-问题描述详见https://blog.csdn.net/ljl6158999/article/details/78657799  
 ## Note for api_top
+返回值{'keywords':[key1,key2,...],'properties':[proper1:information1,proper2:information2,...]}
 ### 调用方法
 ```python
-python3 api_top.py <filepath>
-#示例
-#在/usr/local下有一个text.txt文件
-#建议不管文件在何处，都要填完整路径
-python3 api_top.py /usr/local/text.txt
+from api_functions import api_top
+result = api_top.get_keywords_properties(<filepath>)
+# 示例
+# 在/usr/local下有一个text.txt文件
+# 建议不管文件在何处，都要填完整路径
+>>> from GDBFS.api_extension import api_top
+>>> api_top.get_keywords_properties('/home/ubuntu/test.txt')
+# 输出
+{'keywords': ['kaggle', 'google', 'ceo anthony goldbloom', 'san francisco', 'ceo anthony', 'data', 'co-founder ceo anthony', 'platform', 'anthony goldbloom declined', 'francisco this week', 'machine learning', 'service', 'acquiring kaggle', 'machine', 'learning', 'conference in san', 'goldbloom', 'ben hamner', 'cloud', 'competition'], 'properties': {'file_size': 2290, 'file_create_time': '2020-06-09T14:52:27', 'file_modified_time': '2020-06-09T14:52:27', 'file_accessed_time': '2020-06-11T17:13:13', 'file_create_location': None}}
 ```
 ### 所需的python库  
 requests  

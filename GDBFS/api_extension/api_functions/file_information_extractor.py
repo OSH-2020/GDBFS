@@ -8,14 +8,18 @@ from geopy.geocoders import Photon
 # input [Latitude,Longitude],return address in ENGLISH list
 def geo_extraction(latitude, longitude):
     # 通过经纬度解析地址
-    geolocator = Photon(user_agent="my-application")
-    position = geolocator.reverse(str(latitude) + ',' + str(longitude), limit=1)
-    addr = position.address.split(',')
-    result = []
-    for attribute in addr:
-        # 剔除address非中文部分，大概能精确到市
-        if attribute.strip(' ').encode('UTF-8').isalpha():
-            result.append(attribute)
+    try:
+        geolocator = Photon(user_agent="my-application")
+        position = geolocator.reverse(str(latitude) + ',' + str(longitude), limit=1)
+        addr = position.address.split(',')
+        result = []
+        for attribute in addr:
+            # 剔除address非中文部分，大概能精确到市
+            if attribute.strip(' ').encode('UTF-8').isalpha():
+                result.append(attribute)
+    except Exception as err:
+        result = []
+        print(err)
     return result
 
 

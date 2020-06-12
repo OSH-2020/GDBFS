@@ -1,3 +1,4 @@
+import os
 import requests
 import base64
 from urllib import request
@@ -26,16 +27,15 @@ def keyword_photo_extract(filepath):
         length = result_dictType['result_num']
         keywords = result_dictType['result']
         # 统一数据结构
-        keywords_final = [[] for i in range(length)]
-        # TODO:讨论返回值形式，目前返回值为[[keyword,accuracy],...]形式，之后考虑改成字典
+        keywords_final = {}
         cur_pos = 0
         for i in range(length):
             # 把中文内容翻译成英文
             en_keyword = translate_iciba_api(keywords[cur_pos]['keyword'])
             if en_keyword is None:
                 continue
-            keywords_final[cur_pos].append(en_keyword)
-            keywords_final[cur_pos].append(keywords[cur_pos]['score'])
+            unit = {en_keyword: keywords[cur_pos]['score']}
+            keywords_final.update(unit)
             cur_pos += 1
         return keywords_final
 
@@ -44,13 +44,14 @@ def keyword_photo_extract(filepath):
 def get_token():
     try:
         # 如果有token文件，则优先使用token，从而不用多次调用获取token的接口
-        with open('api_functions/token.txt', 'r', encoding='utf-8') as f:
+        token_filepath = os.path.join(os.path.dirname(__file__)) + '/token.txt'
+        with open(token_filepath, 'r', encoding='utf-8') as f:
             token = f.readline().strip(' \t\n')
     except OSError:
         # 如果没有token文件，则使用key获取token并保存
         gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-        # TODO:解决文件相对路径的巨坑
-        key_file = open('api_functions/key.txt', 'r', encoding='utf-8')
+        key_filepath = os.path.join(os.path.dirname(__file__)) + '/key.txt'
+        key_file = open(key_filepath, 'r', encoding='utf-8')
         API_Key = key_file.readline().strip(' \t\n')
         Secret_Key = key_file.readline().strip(' \t\n')
         key_file.close()
