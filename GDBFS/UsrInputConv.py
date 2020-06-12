@@ -7,7 +7,7 @@ import datetime
 from datetime import datetime,timedelta
 
 '''
-TODO: "weekend","last Sunday"
+TODO: "weekend","last Sunday","last September"
 TODO: size 
 TODO: last year/month yesterday in case first day
 '''
@@ -38,7 +38,7 @@ def main(yourkey,atime,ctime,mtime):
     #print('atime:    ',searchkey.atime)
     #print('ctime:    ',searchkey.ctime)
     #print('mtime:    ',searchkey.mtime)
-    
+    return searchkey
 
 def time_top(str):
     if(str != 'None'):
@@ -99,6 +99,7 @@ def list_filter(l):
         VBN: <NNS | NN>{<VBN>} #case: remove 'taken' in "photo taken in ..."
         IN:  {<IN>}            #remove preposition or subordinating conjunction
         DT:  {<DT>}            #remove deteminer
+        CC:  {<CC>}
         '''
     chunkParser = nltk.RegexpParser(grammar)
     tree = chunkParser.parse(l)
