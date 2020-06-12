@@ -27,6 +27,7 @@ re
 exifread  
 geopy  
 time  
+docx
 
 <font color=red size=3>**Attention**</font>  
 该函数目前能实现对txt、jpeg、jpg、bmp、png的关键字提取，以及其他文件的属性提取  
