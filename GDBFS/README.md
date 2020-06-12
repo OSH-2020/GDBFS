@@ -23,20 +23,21 @@
 ## 接口说明
 
 ### neobase.py
-
-提供了类`FileNode`, 通过给出文件路径等信息, 可以构造该类对象.
- 
-#### 方法说明
-
-##### get_subgraph()
-
+#### :class FileNode:
+通过给出文件路径等信息, 可以构造该类对象.
+##### 方法说明
+###### get_subgraph()
 返回值:
 1. 文件结点和关键词结点及其之间关系
 2. 关键词结点
-
-##### merge_into()
-
+###### merge_into()
 将文件结点, 关键词结点及其间关系提交到数据库里.
+#### :Function get_files:
+函数原型:
+```python
+get_files(graph: Graph, keywords: list, file_properties: dict) -> list
+```
+调用该函数, 能返回图`graph`中满足与`keywords`相邻且满足`file_properties`中条件的文件信息列表(其元素为`dict`)
 
 ### UsrInputConv.py
 提供了类`KeyWord`，类内包含转换后的`keywords`，`atime`,`ctime`,`mtime`,均以list类型呈现  
