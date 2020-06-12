@@ -62,6 +62,6 @@ def get_token():
         response = request.urlopen(req, context=gcontext).read().decode('UTF-8')
         result = json.loads(response)
         token = result['access_token']
-        with open('api_functions/token.txt', 'w', encoding='utf-8') as f:
+        with open(os.path.split(__file__)[0] + '/token.txt', 'w', encoding='utf-8') as f:
             f.write(token)
     return token
