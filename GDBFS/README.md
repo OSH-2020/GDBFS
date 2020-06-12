@@ -37,3 +37,21 @@
 ##### merge_into()
 
 将文件结点, 关键词结点及其间关系提交到数据库里.
+
+### UsrInputConv.py
+提供了类`KeyWord`，类内包含转换后的`keywords`，`atime`,`ctime`,`mtime`,均以list类型呈现  
+* 时间的默认值为最近三年内
+> p.s. 仅通过了独立测试，还没完成包装  
+##### example
+* 你可以通过`python UsrInputConv.py --help`查看使用方式  
+* 一个I/O的示例如下：
+```bash
+//input
+python test.py "a movie about Tom Smith and Jack in USTC" --ctime "in September last year"
+//output
+keywords:  ['movie', 'Tom Smith', 'Jack', 'USTC']
+atime:     ['2017-06-12T00:00:00 - 2020-06-12T23:01:50']
+ctime:     ['2019-09-01T00:00:00 - 2019-09-30T23:59:59']
+mtime:     ['2017-06-12T00:00:00 - 2020-06-12T23:01:50']
+
+```
