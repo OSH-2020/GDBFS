@@ -49,8 +49,8 @@ def time_top(str):
 
     l = []
     for i in range(0, len(time_tu[0])):
-        newrange = datetime.strftime(time_tu[0][i], '%Y-%m-%dT%H:%M:%S') + ' - ' 
-        newrange += datetime.strftime(time_tu[1][i], '%Y-%m-%dT%H:%M:%S')
+        newrange = (datetime.strftime(time_tu[0][i], '%Y-%m-%dT%H:%M:%S'),
+                    datetime.strftime(time_tu[1][i], '%Y-%m-%dT%H:%M:%S'))
         l.append(newrange)
     return l
 
