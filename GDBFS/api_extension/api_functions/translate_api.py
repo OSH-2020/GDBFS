@@ -6,16 +6,21 @@ import re
 输入'你好',网页返回'hello,hi,how do you do',但实际函数只返回'hello'
 主要是因为这个api没有介绍。。。我直接把网页curl下来了，然后用正则解析(水平太菜) T^T
 '''
+
+
 # TODO:考虑修改网页解析部分，从而函数可以用列表的方式返回多个结果
 def translate_iciba_api(text):
     url = 'http://dict-co.iciba.com/search.php'
-    data_send = {'word':text}
+    data_send = {'word': text}
     # 向网页发送请求
-    result_htmlType = requests.post(url, data = data_send)
+    result_htmlType = requests.post(url, data=data_send)
     # 将请求得到的结果进行正则匹配，去掉网页中的垃圾HTML信息
-    result_beforeProcess = re.search('<br><br>\n(.*)&nbsp;&nbsp;\n\n',result_htmlType.text)
-    if result_beforeProcess == None:
+    result_beforeProcess = re.search('<br><br>\n(.*)&nbsp;&nbsp;\n\n', result_htmlType.text)
+    if result_beforeProcess is None:
         result = None
     else:
-        result = re.sub('&nbsp;&nbsp;(.*)','',result_beforeProcess.group(1))
+        # 去除空格和分号
+        result = re.sub('&nbsp;&nbsp;(.*)', '', result_beforeProcess.group(1))
+        # 去除解释性说明
+        result = re.sub('\\[(.*)\\]', '', result)
     return result
