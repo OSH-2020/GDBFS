@@ -2,6 +2,7 @@
 GDBFS/*
 !GDBFS/README.md
 !GDBFS/neobase.py
+!GDBFS/sample.py
 !GDBFS/UsrInputConv.py
 !GDBFS/api_extension
 GDBFS/api_extension/*
