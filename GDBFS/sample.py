@@ -2,32 +2,39 @@
 All test codes can be put here.
 """
 import neobase
-import logging
-import py2neo
+from pprint import pprint
 from py2neo import *
 
 
-def test_py2neo():
-    # Set log format
-    logging.basicConfig(format='%(asctime)s - : %(message)s',
-                        level=logging.INFO)
-    # Log the version of py2neo
-    logging.info('The version of your py2neo is: {}'.format(py2neo.__version__))
-
-    # connect to the database
-    g = Graph("bolt://localhost:7687")
-    logging.info('Connected to a graph:\n{}'.format(g))
-
+def test_create_file_node():
+    graph = Graph("bolt://localhost:7687")
     # Here is a sample for FileNode
     neo4j_txt = neobase.FileNode(r'sample_files/neo4j.txt')
-    neo4j_txt.merge_into(g)
+    neo4j_txt.merge_into(graph)
+    pprint(neo4j_txt.node)
+    # Invoking the picture extractor takes lots of time. So comment it out.
+    '''
+    cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
+    cat_jpeg.merge_into(graph)
+    pprint(cat_jpeg.node)
+    '''
 
-    neobase.FileNode(r'sample_files/cat.jpeg').merge_into(g)
 
+def test_get_files():
+    graph = Graph("bolt://localhost:7687")
     # Get files according to keywords and file_properties
-    neobase.get_files(g, keywords=['graph', 'database', 'neo4j'], file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
-    neobase.get_files(g, keywords=['cat'], file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
+    neo4jtxt = neobase.get_files(graph,
+                                 keywords=['graph', 'database', 'neo4j'],
+                                 file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
+    for f in neo4jtxt:
+        pprint(f.data())
+    cat_files = neobase.get_files(graph,
+                                  keywords=['cat'],
+                                  file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
+    for f in cat_files:
+        pprint(f.data())
 
 
 if __name__ == "__main__":
-    test_py2neo()
+    test_create_file_node()
+    test_get_files()
