@@ -3,10 +3,10 @@ from py2neo import *
 from py2neo.ogm import *
 import os
 import time
-import logging
 
 
 class FileNode:
+    # TODO: use hzy's file information and keywords API to create the FileNode
     RELATES_TO = Relationship.type('RELATES_TO')
 
     def __init__(self, file_path, keywords=None, label="File", other_properties=None):
@@ -139,25 +139,3 @@ RETURN DISTINCT f""".format(keywords=cypher_repr(keywords),
     import pprint
     pprint.pprint(files.data())
     return files
-
-
-def main():
-    logging.basicConfig(format='%(asctime)s - : %(message)s',
-                        level=logging.INFO)
-    logging.info('The version of your py2neo is: {}'.format(py2neo.__version__))
-    # Connect to the database
-    # db = Database("bolt://localhost:7687")
-    # logging.info('Connected to a database.\nURI: {}, name: {}:'.format(db.uri, db.name))
-    # Return the graph from the database
-    g = Graph("bolt://localhost:7687")
-    logging.info('Connected to a graph:\n{}'.format(g))
-    # Here is a sample for FileNode
-    n = FileNode(r'neobase.py', keywords=['cypher', 'neo4j'])
-    n.merge_into(g)
-
-    get_files(g, keywords=['cypher', 'neo4j'], file_properties={'cTime': [('2020-06-10', '2020-06-20')]})
-    # get = g.run(cypher)
-
-
-if __name__ == "__main__":
-    main()
