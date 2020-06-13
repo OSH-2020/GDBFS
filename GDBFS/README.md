@@ -39,6 +39,12 @@
 get_files(graph: Graph, keywords: list, file_properties: dict) -> list
 ```
 调用该函数, 能返回图`graph`中满足与`keywords`相邻且满足`file_properties`中条件的文件信息列表(其元素为`dict`)
+#### :Function delete_file:
+函数原型:
+```python
+def delete_file(graph: Graph, path: str)
+```
+将路径为`path`的文件结点从数据库中删除, 并且相邻关键词结点若已孤立则也删除.
 
 ### UsrInputConv.py
 提供了类`KeyWord`，类内包含转换后的`keywords`，`atime`,`ctime`,`mtime`,均以list类型呈现  
