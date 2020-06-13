@@ -17,3 +17,4 @@ GDBFS/api_extension/api_functions/*
 !GDBFS/api_extension/api_functions/translate_api.py
 !GDBFS/api_extension/api_functions/file_information_extractor.py
 !GDBFS/api_extension/api_functions/__init__.py
+!GDBFS/sample_files
