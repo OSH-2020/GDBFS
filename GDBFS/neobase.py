@@ -3,26 +3,28 @@ from py2neo import *
 from py2neo.ogm import *
 import os
 import time
+from api_extension import api_top
 
 
 class FileNode:
-    # TODO: use hzy's file information and keywords API to create the FileNode
+    # TODO: use hzy's file information API to create the FileNode. Now only keywords used.
     RELATES_TO = Relationship.type('RELATES_TO')
 
-    def __init__(self, file_path, keywords=None, label="File", other_properties=None):
+    def __init__(self, file_path, label="File", other_keywords=None, other_properties=None):
         """
         :param file_path: The full path of the file.
         :type file_path: str
-        :param keywords: The keywords.
-        :type keywords: list(str)
+        :param other_keywords: The other keywords needed to be added.
+        :type other_keywords: list(str)
         :param label: The label for this node. 'File' by default
         :type label: str
         :param other_properties: A dict indicating the other properties needed to be specified. None by default
         :type other_properties: dict
         """
         self.file_path = file_path
-        self.keywords = keywords
-        self.node = self.file_to_node(file_path, label, other_properties)
+        file_info = api_top.get_keywords_properties(file_path, 5)
+        self.keywords = list(set(file_info['keywords']) | set(other_keywords if other_keywords is not None else []))
+        self.node = self.file_to_node(file_path, label)
         self.subgraph, self.keyword_nodes = self.get_subgraph
 
     def merge_into(self, graph):
@@ -30,6 +32,7 @@ class FileNode:
         :param graph: The graph which the nodes and relationships to be merged into.
         :type graph: py2neo.database.Graph
         """
+        print(self.node)
         graph.merge(self.node, 'File', 'name')
         graph.merge(self.keyword_nodes, 'Keyword', 'name')
         graph.merge(self.subgraph)
@@ -66,6 +69,7 @@ class FileNode:
         """
         if other_properties is None:
             other_properties = {}
+        properties = {}
         properties = FileNode.get_property(file_path)
         properties.update(other_properties)
         node = Node(label, **properties)

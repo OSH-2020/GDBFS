@@ -7,7 +7,7 @@ import py2neo
 from py2neo import *
 
 
-def test_py2neo():
+def tes_py2neo():
     # Set log format
     logging.basicConfig(format='%(asctime)s - : %(message)s',
                         level=logging.INFO)
@@ -19,13 +19,12 @@ def test_py2neo():
     logging.info('Connected to a graph:\n{}'.format(g))
 
     # Here is a sample for FileNode
-    n = neobase.FileNode(r'neobase.py', keywords=['cypher', 'neo4j'])
+    n = neobase.FileNode(r'sample_files/neo4j.txt')
     n.merge_into(g)
 
     # Get files according to keywords and file_properties
-    neobase.get_files(g, keywords=['cypher', 'neo4j'], file_properties={'cTime': [('2020-06-10', '2020-06-20')],
-                                                                'name': 'neobase.py'})
+    neobase.get_files(g, keywords=['graph', 'database', 'neo4j'], file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
 
 
 if __name__ == "__main__":
-    test_py2neo()
+    tes_py2neo()
