@@ -3,6 +3,7 @@ All test codes can be put here.
 """
 import neobase
 from pprint import pprint
+import os
 from py2neo import *
 
 
@@ -43,6 +44,13 @@ def test_get_files():
         print('id: ', str(f.identity))
 
 
+def test_delete_file():
+    print("--------------------------------------------test_delete_file()--------------------------------------------")
+    graph = Graph("bolt://localhost:7687")
+    neobase.delete_file(graph, os.path.realpath('sample_files/neo4j.txt'))
+
+
 if __name__ == "__main__":
     test_create_file_node()
     test_get_files()
+    test_delete_file()

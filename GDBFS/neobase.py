@@ -83,7 +83,6 @@ class FileNode(Node):
     def from_record(record):
         keys = record['keys']
         node = record.to_subgraph()
-        print(dict(node))
         file_node = FileNode(file_path=node['path'],
                              properties=dict(node),
                              keywords=keys)
@@ -137,3 +136,13 @@ RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr
     for record in result:
         file_nodes.append(FileNode.from_record(record))
     return file_nodes
+
+
+def delete_file(graph: Graph, path: str):
+    cypher = """
+MATCH(f: File {properties})-[r: RELATES_TO]->(k:Keyword)
+DELETE r, f
+WITH k
+WHERE NOT EXISTS((k) < --())
+DELETE k""".format(properties=cypher_repr({'path': path}))
+    graph.run(cypher)
