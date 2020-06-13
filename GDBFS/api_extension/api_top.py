@@ -6,7 +6,7 @@ from .api_functions.photo_extraction import keyword_photo_extract
 
 # TODO:增加关键词判优函数，增加API数量，通过不同API返回关键词的比较和综合，得到最终关键词列表
 # TODO:增加音乐、视频等的识别
-def get_keywords_properties(filepath):
+def get_keywords_properties(filepath, keys_limit=-1):
     # 获取文件信息
     filename_extension = filepath.split('.')[-1].lower()
     file_information = get_file_information(filepath)
@@ -22,7 +22,7 @@ def get_keywords_properties(filepath):
     else:
         keywords_baidu = {}
     keywords = {**keywords_yake, **keywords_baidu}
-    return {'keywords': list(keywords.keys()), 'properties': file_information}
+    return {'keywords': list(keywords.keys())[:keys_limit], 'properties': file_information}
 
 
 if __name__ == "__main__":
