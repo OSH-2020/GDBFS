@@ -31,8 +31,7 @@ class FileNode:
         :param graph: The graph which the nodes and relationships to be merged into.
         :type graph: py2neo.database.Graph
         """
-        print(self.node)
-        graph.merge(self.node, 'File', 'name')
+        graph.merge(self.node, 'File', 'path')
         graph.merge(self.keyword_nodes, 'Keyword', 'name')
         graph.merge(self.subgraph)
 
@@ -74,6 +73,7 @@ class FileNode:
         node = Node(label, **properties)
         return node
 
+
 def get_files(graph: Graph, keywords: list, file_properties: dict) -> list:
     """
     :param graph: The Graph from the database
@@ -112,8 +112,5 @@ MATCH (f:File)-->(kw:Keyword)
 WHERE kw.name in {keywords} {other_constraint}
 RETURN DISTINCT f""".format(keywords=cypher_repr(keywords),
                             other_constraint=constraint_cypher)
-    print(cypher)
     files = graph.run(cypher)
-    import pprint
-    pprint.pprint(files.data())
     return files
