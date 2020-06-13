@@ -14,6 +14,7 @@ def test_create_file_node():
     neo4j_txt.update_info(other_keywords=['neo4j'])
     neo4j_txt.merge_into(graph)
     pprint(neo4j_txt)
+    print('id: ', str(neo4j_txt.identity))
     # Invoking the picture extractor takes lots of time. So comment it out.
     '''
     cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
@@ -33,11 +34,13 @@ def test_get_files():
                                                             ('2020-06-10', '2021-06-10')]})
     for f in neo4jtxt:
         pprint(f)
+        print('id: ', str(f.identity))
     cat_files = neobase.get_files(graph,
                                   keywords=['cat'],
                                   file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
     for f in cat_files:
         pprint(f)
+        print('id: ', str(f.identity))
 
 
 if __name__ == "__main__":

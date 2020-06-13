@@ -1,15 +1,14 @@
 import py2neo
 from py2neo import *
 from py2neo.ogm import *
-import os
-import time
 from api_extension import api_top
+from typing import List
 
 
 class FileNode(Node):
     RELATES_TO = Relationship.type('RELATES_TO')
 
-    def __init__(self, file_path, keywords=None, node_id=None, labels=None, properties=None, auto_update=False):
+    def __init__(self, file_path, keywords=None, labels=None, properties=None, auto_update=False):
         """
         :param file_path: The full path of the file.
         :type file_path: str
@@ -27,9 +26,7 @@ class FileNode(Node):
         self.properties = {} if properties is None else properties
         if auto_update:
             self.update_info()
-        print(labels, properties)
         super().__init__(*labels, **self.properties)
-        self.node_id = node_id
         self.file_path = file_path
         self.node_with_keynodes = None
         self.keyword_nodes = None
@@ -82,8 +79,19 @@ class FileNode(Node):
         super().__init__(*self.labels, **self.properties)
         self.update_node_with_keynodes()
 
+    @staticmethod
+    def from_record(record):
+        keys = record['keys']
+        node = record.to_subgraph()
+        print(dict(node))
+        file_node = FileNode(file_path=node['path'],
+                             properties=dict(node),
+                             keywords=keys)
+        file_node.__dict__.update(node.__dict__)
+        return file_node
 
-def get_files(graph: Graph, keywords: list, file_properties: dict) -> list:
+
+def get_files(graph: Graph, keywords: list, file_properties: dict) -> List[FileNode]:
     """
     :param graph: The Graph from the database
     :param keywords: The associated keywords
@@ -126,10 +134,6 @@ RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr
     # print(cypher)
     result = graph.run(cypher)
     file_nodes = []
-    for file_node in result.data():
-        print('file_node', file_node)
-        file_nodes.append(FileNode(file_path=file_node['f']['path'],
-                                   properties=file_node['f'],
-                                   keywords=file_node['keys'],
-                                   node_id=file_node['id']))
+    for record in result:
+        file_nodes.append(FileNode.from_record(record))
     return file_nodes
