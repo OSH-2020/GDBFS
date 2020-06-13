@@ -19,11 +19,14 @@ def test_py2neo():
     logging.info('Connected to a graph:\n{}'.format(g))
 
     # Here is a sample for FileNode
-    n = neobase.FileNode(r'sample_files/neo4j.txt')
-    n.merge_into(g)
+    neo4j_txt = neobase.FileNode(r'sample_files/neo4j.txt')
+    neo4j_txt.merge_into(g)
+
+    neobase.FileNode(r'sample_files/cat.jpeg').merge_into(g)
 
     # Get files according to keywords and file_properties
     neobase.get_files(g, keywords=['graph', 'database', 'neo4j'], file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
+    neobase.get_files(g, keywords=['cat'], file_properties={'cTime': [('2020-06-10', '2021-06-10')]})
 
 
 if __name__ == "__main__":
