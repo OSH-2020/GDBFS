@@ -7,7 +7,6 @@ from api_extension import api_top
 
 
 class FileNode:
-    # TODO: use hzy's file information API to create the FileNode. Now only keywords used.
     RELATES_TO = Relationship.type('RELATES_TO')
 
     def __init__(self, file_path, label="File", other_keywords=None, other_properties=None):
@@ -24,7 +23,7 @@ class FileNode:
         self.file_path = file_path
         file_info = api_top.get_keywords_properties(file_path, 5)
         self.keywords = list(set(file_info['keywords']) | set(other_keywords if other_keywords is not None else []))
-        self.node = self.file_to_node(file_path, label)
+        self.node = self.file_to_node(file_path, label, other_properties=file_info['properties'])
         self.subgraph, self.keyword_nodes = self.get_subgraph
 
     def merge_into(self, graph):
@@ -70,35 +69,10 @@ class FileNode:
         if other_properties is None:
             other_properties = {}
         properties = {}
-        properties = FileNode.get_property(file_path)
+        # properties = FileNode.get_property(file_path)
         properties.update(other_properties)
         node = Node(label, **properties)
         return node
-
-    @staticmethod
-    def get_property(file_path):
-        """
-        :param file_path: The full path of the file.
-        :type file_path: str
-        :return: A dict for the properties of the file.
-        :references:
-            os: https://www.runoob.com/python/os-file-methods.html
-            os.path: https://www.runoob.com/python/python-os-path.html
-        """
-        if not file_path:
-            return None
-        parent_path, file_name = os.path.split(file_path)
-        struct_access_time = time.localtime(os.path.getatime(file_path))
-        struct_create_time = time.localtime(os.path.getctime(file_path))
-        struct_modify_time = time.localtime(os.path.getmtime(file_path))
-        properties = {'name': file_name,
-                      'path': parent_path,
-                      'size': os.path.getsize(file_path),
-                      'aTime': time.strftime('%Y-%m-%dT%H:%M:%S', struct_access_time),
-                      'cTime': time.strftime('%Y-%m-%dT%H:%M:%S', struct_create_time),
-                      'mTime': time.strftime('%Y-%m-%dT%H:%M:%S', struct_modify_time)}
-        return properties
-
 
 def get_files(graph: Graph, keywords: list, file_properties: dict) -> list:
     """

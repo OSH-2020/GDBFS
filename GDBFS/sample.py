@@ -7,7 +7,7 @@ import py2neo
 from py2neo import *
 
 
-def tes_py2neo():
+def test_py2neo():
     # Set log format
     logging.basicConfig(format='%(asctime)s - : %(message)s',
                         level=logging.INFO)
@@ -27,4 +27,4 @@ def tes_py2neo():
 
 
 if __name__ == "__main__":
-    tes_py2neo()
+    test_py2neo()
