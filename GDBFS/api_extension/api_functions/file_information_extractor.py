@@ -36,6 +36,7 @@ def format_lati_long(data):
 
 # 提取文件exif信息
 def exif_extraction(filepath):
+    result = ''
     try:
         img = exifread.process_file(open(filepath, 'rb'))
         latitude = format_lati_long(str(img['GPS GPSLatitude']))
@@ -48,7 +49,7 @@ def exif_extraction(filepath):
         # print("File doesn't exist or Permission denied")
         result = None
     except Exception as err:
-        print("Unknow error happened!" + err)
+        print("Unknown error happened!" + err.__str__())
     return result
 
 
@@ -85,6 +86,10 @@ def time_extraction(filepath):
 def get_file_information(filepath):
     fsize, fctime, fmtime, fatime = time_extraction(filepath)
     location = exif_extraction(filepath)
-    return {'file_size': fsize, 'file_create_time': fctime,
-            'file_modified_time': fmtime, 'file_accessed_time': fatime,
+    return {'path': os.path.realpath(filepath),
+            'name': os.path.split(filepath)[1],
+            'size': fsize,
+            'cTime': fctime,
+            'mTime': fmtime,
+            'aTime': fatime,
             'file_create_location': location}
