@@ -31,8 +31,7 @@ docx
 
 <font color=red size=3>**Attention**</font>  
 该函数目前能实现对txt、jpeg、jpg、bmp、png的关键字提取，以及其他文件的属性提取  
-该函数不会返回None，keywords只会返回空列表，file_information返回值见file_information_extractor的说明  
-TODO:有人会md文件内标题的超链接吗，把file_information_extractor链接到下面的Note for file_information_extractor标题上吧）
+该函数不会返回None，keywords只会返回空列表，file_information返回值见[file_information_extractor](#note-for-file_information_extractor)的说明  
 
 ## Note for yake
 yake是一个用于关键词提取(keyword extraction)的API  
