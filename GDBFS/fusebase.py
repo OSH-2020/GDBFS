@@ -160,21 +160,16 @@ class GDBFSFuse(Operations):
             # Here needed to be pop before add to database.
             # Otherwise, the neobase need to access this file, and invoke flush again.
             self.write_times.pop(full_path)
-            # print('[flush] cat! ', end='')
-            # os.system('cat {}'.format(os.path.realpath(self.root + path)))
             graph = Graph("bolt://localhost:7687")
             file = neobase.FileNode(full_path)
             file.update_info()
             file.merge_into(graph)
-            pprint(file)
         else:
             print('[flush] This file({}) has not been writen!'.format(path))
 
         return os.fsync(fh)
 
     def release(self, path, fh):
-        # print('[release] cat! ', end='')
-        # os.system('cat {}'.format(os.path.realpath(self.root + path)))
         print('[release] {}'.format(path))
         return os.close(fh)
 
