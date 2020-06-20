@@ -59,8 +59,10 @@ class FileNode(Node):
         self.node_with_keynodes = subgraph
         self.keyword_nodes = Subgraph(keyword_nodes)
 
-    def update_info(self, keys_limit=5, other_keywords=None, other_properties=None):
+    def update_info(self, keys_limit=5, other_keywords=None, other_properties=None, filename_extension_specified=None):
         """
+        :param filename_extension_specified: specify the file type
+        :type filename_extension_specified: str
         :param keys_limit: limit of keywords
         :type keys_limit: int
         :param other_keywords: Other keywords needed to be added
@@ -72,9 +74,9 @@ class FileNode(Node):
         """
         if other_properties is None:
             other_properties = {}
-        # properties = FileNode.get_property(file_path)
-        file_info = api_top.get_keywords_properties(self.file_path, keys_limit)
-        self.keywords += list(set(file_info['keywords']) | set(other_keywords if other_keywords is not None else []))
+        file_info = api_top.get_keywords_properties(self.file_path, keys_limit, filename_extension_specified)
+        self.keywords = list(set(file_info['keywords'])
+                             | set(other_keywords if other_keywords is not None else []))
         self.properties.update(file_info['properties'])
         self.properties.update(other_properties)
         super(FileNode, self).__init__(*self.labels, **self.properties)
@@ -163,16 +165,22 @@ def rename_file(graph: Graph, old: str, new: str):
     if old[0] != '/' or new[0] != '/':
         print('not real path')
         return
+    # Remove the original one
     cypher = """
-MATCH (old:File {{path:{old_path}}})
-    SET old.name = {new_name}, old.path = {new_path}
-    WITH old
-        MATCH (new:File {{path:{new_path}}})
-        WHERE new IS NOT NULL
-            SET new=old
-            WITH new, old
-                WHERE id(new) <> id(old)
-                    DETACH DELETE old""".format(old_path=cypher_repr(old),
-                                                new_name=cypher_repr(os.path.split(new)[1]),
-                                                new_path=cypher_repr(new))
+OPTIONAL MATCH (new:File {{path:{new_path}}})
+OPTIONAL MATCH (new)-[r: RELATES_TO]->(k:Keyword)
+    WITH new, r, k
+        DELETE new, r
+        WITH k
+            WHERE NOT EXISTS((k) < --())
+                DELETE k""".format(old_path=cypher_repr(old),
+                                   new_name=cypher_repr(os.path.split(new)[1]),
+                                   new_path=cypher_repr(new))
     graph.run(cypher)
+    delete_file(graph, old)
+    # Update
+    file_node = FileNode(old)
+    file_node.update_info(filename_extension_specified=os.path.splitext(new)[1][1:],
+                          other_properties={'path': new,
+                                            'name': os.path.split(new)[1]})
+    file_node.merge_into(graph)
