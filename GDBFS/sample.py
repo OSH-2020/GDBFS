@@ -53,7 +53,8 @@ def test_delete_file():
 def test_rename_file():
     print("--------------------------------------------test_rename_file()--------------------------------------------")
     graph = Graph("bolt://localhost:7687")
-    neobase.rename_file(graph, '/hehe', '/haha')
+    neobase.rename_file(graph, os.path.realpath('GDBFS_root/neo4j.txt'),
+                        os.path.realpath('GDBFS_root/neo4j2.txt'))
 
 
 if __name__ == "__main__":

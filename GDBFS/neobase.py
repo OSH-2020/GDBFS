@@ -127,10 +127,10 @@ def get_files(graph: Graph, keywords: list, file_properties: dict) -> List[FileN
     cypher = """
 MATCH (f:File)-->(kw:Keyword)
 WHERE kw.name in {keywords} {other_constraint}
-WITH DISTINCT f
-MATCH (f)-->(keys)
-RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr(keywords),
-                                                            other_constraint=constraint_cypher)
+    WITH DISTINCT f
+        MATCH (f)-->(keys)
+        RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr(keywords),
+                                                                    other_constraint=constraint_cypher)
     # print(cypher)
     result = graph.run(cypher)
     file_nodes = []
@@ -142,18 +142,28 @@ RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr
 def delete_file(graph: Graph, path: str):
     cypher = """
 MATCH (f: File {properties})
-OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
-DELETE r, f
-WITH k
-WHERE NOT EXISTS((k) < --())
-DELETE k""".format(properties=cypher_repr({'path': path}))
+    OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
+        DELETE r, f
+        WITH k
+            WHERE NOT EXISTS((k) < --())
+                DELETE k""".format(properties=cypher_repr({'path': path}))
     graph.run(cypher)
 
 
 def rename_file(graph: Graph, old: str, new: str):
+    if old[0] != '/' or new[0] != '/':
+        print('not real path')
+        return
     cypher = """
-MATCH (f: File {{path:{old_path}}})
-SET f.name={name}, f.path={new_path}""".format(old_path=cypher_repr(old),
-                                               name=cypher_repr(os.path.split(new)[1]),
-                                               new_path=cypher_repr(new))
+MATCH (old:File {{path:{old_path}}})
+    SET old.name = {new_name}, old.path = {new_path}
+    WITH old
+        MATCH (new:File {{path:{new_path}}})
+        WHERE new IS NOT NULL
+            SET new=old
+            WITH new, old
+                WHERE id(new) <> id(old)
+                    DETACH DELETE old""".format(old_path=cypher_repr(old),
+                                                new_name=cypher_repr(os.path.split(new)[1]),
+                                                new_path=cypher_repr(new))
     graph.run(cypher)
