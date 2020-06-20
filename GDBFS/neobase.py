@@ -26,7 +26,7 @@ class FileNode(Node):
         self.properties = {} if properties is None else properties
         if auto_update:
             self.update_info()
-        super().__init__(*labels, **self.properties)
+        super(FileNode, self).__init__(*labels, **self.properties)
         self.file_path = file_path
         self.node_with_keynodes = None
         self.keyword_nodes = None
@@ -76,7 +76,7 @@ class FileNode(Node):
         self.keywords += list(set(file_info['keywords']) | set(other_keywords if other_keywords is not None else []))
         self.properties.update(file_info['properties'])
         self.properties.update(other_properties)
-        super().__init__(*self.labels, **self.properties)
+        super(FileNode, self).__init__(*self.labels, **self.properties)
         self.update_node_with_keynodes()
 
     @staticmethod
@@ -140,9 +140,11 @@ RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr
 
 def delete_file(graph: Graph, path: str):
     cypher = """
-MATCH(f: File {properties})-[r: RELATES_TO]->(k:Keyword)
+MATCH(f: File {properties})
+OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
 DELETE r, f
 WITH k
 WHERE NOT EXISTS((k) < --())
 DELETE k""".format(properties=cypher_repr({'path': path}))
+    print(cypher)
     graph.run(cypher)
