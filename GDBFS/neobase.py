@@ -140,6 +140,10 @@ WHERE kw.name in {keywords} {other_constraint}
 
 
 def delete_file(graph: Graph, path: str):
+    """
+    :param graph: The Graph from the database
+    :param path: The path of the file to delete
+    """
     cypher = """
 MATCH (f: File {properties})
     OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
@@ -151,6 +155,11 @@ MATCH (f: File {properties})
 
 
 def rename_file(graph: Graph, old: str, new: str):
+    """
+    :param graph: The Graph from the database
+    :param old: The old path(must be full path)
+    :param new: The new path(must be full path)
+    """
     if old[0] != '/' or new[0] != '/':
         print('not real path')
         return
