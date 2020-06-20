@@ -19,3 +19,4 @@ GDBFS/api_extension/api_functions/*
 !GDBFS/api_extension/api_functions/__init__.py
 !GDBFS/sample_files
 !GDBFS/top.py
+!GDBFS/fusebase.py
