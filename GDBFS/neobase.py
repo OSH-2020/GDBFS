@@ -3,6 +3,7 @@ from py2neo import *
 from py2neo.ogm import *
 from api_extension import api_top
 from typing import List
+import os
 
 
 class FileNode(Node):
@@ -140,11 +141,19 @@ RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr
 
 def delete_file(graph: Graph, path: str):
     cypher = """
-MATCH(f: File {properties})
+MATCH (f: File {properties})
 OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
 DELETE r, f
 WITH k
 WHERE NOT EXISTS((k) < --())
 DELETE k""".format(properties=cypher_repr({'path': path}))
-    print(cypher)
+    graph.run(cypher)
+
+
+def rename_file(graph: Graph, old: str, new: str):
+    cypher = """
+MATCH (f: File {{path:{old_path}}})
+SET f.name={name}, f.path={new_path}""".format(old_path=cypher_repr(old),
+                                               name=cypher_repr(os.path.split(new)[1]),
+                                               new_path=cypher_repr(new))
     graph.run(cypher)
