@@ -22,6 +22,10 @@ class GDBFSFuse(Operations):
         path = os.path.join(self.root, partial)
         return path
 
+    def get_full_path(self, path):
+        path = os.path.realpath(self.root + path)
+        return path
+
     # Filesystem methods
     # ==================
 
@@ -90,9 +94,9 @@ class GDBFSFuse(Operations):
                                                          'f_frsize', 'f_namemax'))
 
     def unlink(self, path):
-        print('[unlink] {}'.format(self.root + path))
+        print('[unlink] {}'.format(self.get_full_path(path)))
         graph = Graph("bolt://localhost:7687")
-        neobase.delete_file(graph, os.path.realpath(self.root + path))
+        neobase.delete_file(graph, os.path.realpath(self.get_full_path(path)))
         return os.unlink(self._full_path(path))
 
     def symlink(self, target, name):
@@ -100,7 +104,11 @@ class GDBFSFuse(Operations):
         return os.symlink(self._full_path(target), self._full_path(name))
 
     def rename(self, old, new):
-        print('[rename] 应该更新文件名 {} -> {}'.format(old, new))
+        full_old_path = self.get_full_path(old)
+        full_new_path = self.get_full_path(new)
+        print('[rename] 应该更新文件名 {} -> {}'.format(full_old_path, full_new_path))
+        graph = Graph("bolt://localhost:7687")
+        neobase.rename_file(graph, full_old_path, full_new_path)
         return os.rename(self._full_path(old), self._full_path(new))
 
     def link(self, target, name):
@@ -130,11 +138,12 @@ class GDBFSFuse(Operations):
         return os.read(fh, length)
 
     def write(self, path, buf, offset, fh):
+        full_path = self.get_full_path(path)
         if path in self.write_times:
-            self.write_times[path] += 1
+            self.write_times[full_path] += 1
         else:
-            self.write_times[path] = 1
-        print('[write] {}'.format(path))
+            self.write_times[full_path] = 1
+        print('[write] {}'.format(full_path))
         os.lseek(fh, offset, os.SEEK_SET)
         return os.write(fh, buf)
 
@@ -145,15 +154,16 @@ class GDBFSFuse(Operations):
             f.truncate(length)
 
     def flush(self, path, fh):
-        if path in self.write_times:
-            print('[flush] This file({}) has been writen for {} times!'.format(path, self.write_times[path]))
+        full_path = self.get_full_path(path)
+        if full_path in self.write_times:
+            print('[flush] This file({}) has been writen for {} times!'.format(full_path, self.write_times[full_path]))
             # Here needed to be pop before add to database.
             # Otherwise, the neobase need to access this file, and invoke flush again.
-            self.write_times.pop(path)
+            self.write_times.pop(full_path)
             # print('[flush] cat! ', end='')
             # os.system('cat {}'.format(os.path.realpath(self.root + path)))
             graph = Graph("bolt://localhost:7687")
-            file = neobase.FileNode(os.path.realpath(self.root + path))
+            file = neobase.FileNode(full_path)
             file.update_info()
             file.merge_into(graph)
             pprint(file)
