@@ -80,3 +80,82 @@ ctime:     [('2019-09-01T00:00:00', '2019-09-30T23:59:59')]
 mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 
 ```
+
+## Fuse的一些笔记
+
+### cat操作
+
+```shell script
+[open] 打开了/hh.log
+[read] 读了/hh.log
+[flush] flush了/hh.log
+[release] 释放了/hh.log
+```
+
+### echo hh > hh.log
+
+```shell script
+[open] 打开了/hh.log
+[flush] flush了/hh.log
+[write] 应该调用neo4j相关操作更新 {/hh.log}的关键词等！
+[flush] flush了/hh.log
+[release] 释放了/hh.log
+```
+
+### rm hh.log
+
+```shell script
+[access] /hh.log
+[unlink] /hh.log
+```
+
+### gedit hh.log
+
+```shell script
+[open] 打开了/hh.log
+[readdir] /
+[access] /hh.log
+[read] 读了/hh.log
+[flush] flush了/hh.log
+[release] 释放了/hh.log
+[access] /hh.log
+[access] /hh.log
+[access] /hh.log
+```
+
+### 在gedit中保存的时候
+
+```shell script
+[open] 打开了/hh.log
+[create] 创建了/.goutputstream-IVRFM0
+[chown] /.goutputstream-IVRFM0
+[chmod] /.goutputstream-IVRFM0
+[flush] flush了/hh.log
+[release] 释放了/hh.log
+[write] 应该调用neo4j相关操作更新 {/.goutputstream-IVRFM0}的关键词等！
+[flush] flush了/.goutputstream-IVRFM0
+[rename] /.goutputstream-IVRFM0 -> /hh.log
+[flush] flush了/hh.log
+[release] 释放了/hh.log
+[access] /hh.log
+[access] /hh.log
+```
+
+### mv 17EB8BD89E18115395F95B881F3AB8A2.jpg pic.jpg
+
+```shell script
+[rename] /17EB8BD89E18115395F95B881F3AB8A2.jpg -> /pic.jpg
+```
+
+### eog pic.jpg
+
+```shell script
+[open] 打开了/pic.jpg
+[read] 读了/pic.jpg
+[flush] flush了/pic.jpg
+[release] 释放了/pic.jpg
+[access] /pic.jpg
+```
+
+关闭后没有其他反应.
+
