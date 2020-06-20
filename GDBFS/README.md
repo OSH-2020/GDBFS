@@ -81,7 +81,71 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 
 ```
 
-## Fuse的一些笔记
+## Fuse
+
+### Step by Step
+
+这里讲解怎么使用 `fusebase.py`
+
+首先, 确保目录下有`mnt`文件夹和`GDBFS_root`文件夹.
+- `mnt`文件夹: 实际操作(cp, mv等)都是对`mnt`文件夹内文件做的.
+- `GDBFS_root`文件夹: 对`mnt`文件夹的操作会同步到该文件夹, 以达成永久保存文件的目的.
+
+然后在一个终端运行挂在GDBFSFuse.
+```shell script
+python fusebase.py mnt
+```
+
+这样, `mnt`文件夹上就挂载好了GDBFS.
+
+此后可以进行一些操作, 因为这些操作有一定顺序关系, 建议你第一次使用的时候按顺序尝试.
+
+假设现在我们**另外打开了一个终端**, 并且工作路径在`mnt`目录下.
+
+#### 添加文件
+
+执行以下代码, 将`sample_files`文件夹下的示例文件复制到`mnt`里, 此时图数据库也会有相应操作.
+```shell script
+cp ../sample_files/neo4j.txt ./
+cp ../sample_files/cat.jpg ./
+ls
+```
+此后, 在你的图数据库中查看操作结果, 你会发现已经创建好了两个文件结点及其关键词结点, 以及之间的关系.
+```cypher
+MATCH(N) RETURN N
+```
+
+#### 查看图片
+
+```
+eog cat.jpg
+```
+
+#### 编辑文件
+
+执行以下命令, 编辑文件后保存, 退出. 你会发现图数据库中的修改时间, 文件大小等皆有改变.(如果修改比较大, 可能会发生关键词的改变)
+```shell script
+gedit neo4j.txt
+```
+
+#### 重命名文件
+
+```shell script
+mv neo4j.txt wtf.txt
+```
+
+#### 删除文件
+
+执行以下命令删除文件, 你会发现图数据库中对应结点(和关键词结点)也被删除了.
+```shell script
+rm neo4j.txt
+```
+
+#### 卸载GDBFS
+
+直接Ctrl+C关掉就行了
+
+### 操作结果记录
 
 综合以下操作结果, 目前看来, 需要做的有
 1. 在write的时候记录文件写的动作(后面flush再更新)
@@ -90,7 +154,7 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 3. 在unlink的时候删除结点(及其相邻无效了的关键词结点)
 
 
-### cat操作
+#### cat操作
 
 ```shell script
 [open] 打开了/hh.log
@@ -99,7 +163,7 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 [release] 释放了/hh.log
 ```
 
-### echo hh > hh.log
+#### echo hh > hh.log
 
 ```shell script
 [open] 打开了/hh.log
@@ -109,14 +173,14 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 [release] 释放了/hh.log
 ```
 
-### rm hh.log
+#### rm hh.log
 
 ```shell script
 [access] /hh.log
 [unlink] /hh.log
 ```
 
-### gedit hh.log
+#### gedit hh.log
 
 ```shell script
 [open] 打开了/hh.log
@@ -130,7 +194,7 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 [access] /hh.log
 ```
 
-### 在gedit中保存的时候
+#### 在gedit中保存的时候
 
 ```shell script
 [open] 打开了/hh.log
@@ -148,13 +212,13 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 [access] /hh.log
 ```
 
-### mv 17EB8BD89E18115395F95B881F3AB8A2.jpg pic.jpg
+#### mv 17EB8BD89E18115395F95B881F3AB8A2.jpg pic.jpg
 
 ```shell script
 [rename] /17EB8BD89E18115395F95B881F3AB8A2.jpg -> /pic.jpg
 ```
 
-### eog pic.jpg
+#### eog pic.jpg
 
 ```shell script
 [open] 打开了/pic.jpg
