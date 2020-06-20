@@ -1,13 +1,17 @@
 import os
 import sys
 import errno
-
+import neobase
+from py2neo import *
+from pprint import pprint
 from fuse import FUSE, FuseOSError, Operations
 
 
 class GDBFSFuse(Operations):
-    def __init__(self, root):
+    def __init__(self, root, mount_point):
         self.root = root
+        self.mount_point = os.path.realpath(mount_point)
+        self.write_times = {}
 
     # Helpers
     # =======
@@ -86,7 +90,9 @@ class GDBFSFuse(Operations):
                                                          'f_frsize', 'f_namemax'))
 
     def unlink(self, path):
-        print('[unlink] 删除结点(及其相邻无效了的关键词结点) {}'.format(path))
+        print('[unlink] {}'.format(self.root + path))
+        graph = Graph("bolt://localhost:7687")
+        neobase.delete_file(graph, os.path.realpath(self.root + path))
         return os.unlink(self._full_path(path))
 
     def symlink(self, target, name):
@@ -124,7 +130,11 @@ class GDBFSFuse(Operations):
         return os.read(fh, length)
 
     def write(self, path, buf, offset, fh):
-        print('[write] 记录文件{}写的动作(后面flush再更新)'.format(path))
+        if path in self.write_times:
+            self.write_times[path] += 1
+        else:
+            self.write_times[path] = 1
+        print('[write] {}'.format(path))
         os.lseek(fh, offset, os.SEEK_SET)
         return os.write(fh, buf)
 
@@ -135,10 +145,26 @@ class GDBFSFuse(Operations):
             f.truncate(length)
 
     def flush(self, path, fh):
-        print('[flush] 检查文件{}有没有经历过write, 若有, 更新.'.format(path))
+        if path in self.write_times:
+            print('[flush] This file({}) has been writen for {} times!'.format(path, self.write_times[path]))
+            # Here needed to be pop before add to database.
+            # Otherwise, the neobase need to access this file, and invoke flush again.
+            self.write_times.pop(path)
+            # print('[flush] cat! ', end='')
+            # os.system('cat {}'.format(os.path.realpath(self.root + path)))
+            graph = Graph("bolt://localhost:7687")
+            file = neobase.FileNode(os.path.realpath(self.root + path))
+            file.update_info()
+            file.merge_into(graph)
+            pprint(file)
+        else:
+            print('[flush] This file({}) has not been writen!'.format(path))
+
         return os.fsync(fh)
 
     def release(self, path, fh):
+        # print('[release] cat! ', end='')
+        # os.system('cat {}'.format(os.path.realpath(self.root + path)))
         print('[release] {}'.format(path))
         return os.close(fh)
 
@@ -147,8 +173,8 @@ class GDBFSFuse(Operations):
         return self.flush(path, fh)
 
 
-def mount_gdbfs(mountpoint):
-    FUSE(GDBFSFuse('./sample_files'), mountpoint, foreground=True)
+def mount_gdbfs(mount_point):
+    FUSE(GDBFSFuse('./GDBFS_root', mount_point), mount_point, foreground=True)
 
 
 if __name__ == '__main__':
