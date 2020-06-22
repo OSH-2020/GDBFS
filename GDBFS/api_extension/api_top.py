@@ -17,9 +17,9 @@ def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specifie
     else:
         filename_extension = filename_extension_specified
     # 添加插件
-    plugin_path = os.path.join(sys.path[0], 'api_functions')
+    plugin_path = os.path.join(os.path.dirname(__file__)) + '/api_functions'
     sys.path.append(plugin_path)
-    conf_path = os.path.join(sys.path[0], 'config.txt')
+    conf_path = os.path.join(os.path.dirname(__file__)) + '/config.txt'
     with open(conf_path, 'r') as f:
         while True:
             line = f.readline()
