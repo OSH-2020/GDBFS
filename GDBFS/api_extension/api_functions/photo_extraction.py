@@ -4,12 +4,12 @@ import base64
 from urllib import request
 import ssl
 import json
-from .translate_api import translate_iciba_api
+from translate_api import translate_iciba_api
 import logging
 
 
 # 通用物体和场景识别
-def keyword_photo_extract(filepath):
+def get_keywords(filepath):
     request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general"
     try:
         # 二进制方式打开文件

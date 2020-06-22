@@ -83,7 +83,7 @@ def time_extraction(filepath):
 # 获取文件信息
 # 返回值为{文件大小，创建时间，修改时间，访问时间，(照片)拍摄地点(如果有的话)}
 # 缺省值为None
-def get_file_information(filepath):
+def get_properties(filepath):
     fsize, fctime, fmtime, fatime = time_extraction(filepath)
     location = exif_extraction(filepath)
     return {'path': os.path.realpath(filepath),

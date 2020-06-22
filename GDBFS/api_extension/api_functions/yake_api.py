@@ -7,8 +7,9 @@ import logging
 
 # TODO: 把该函数改为class形式，并取消state参数设置，通过上层函数调用不同的对象函数来控制online api或offline api
 # 目前该函数返回的置信系数时乱序的
-def keyword_yake_api(filepath, filename_extension):
+def get_keywords(filepath):
     logging.info("yake:ready to extract %s", filepath)
+    filename_extension = filepath.split('.')[-1].lower()
     try:
         if filename_extension == 'txt':
             with open(filepath, 'r', encoding='utf-8') as f:

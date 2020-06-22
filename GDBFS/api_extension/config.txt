@@ -1,0 +1,3 @@
+yake_api keywords txt,docx
+file_information_extractor properties all
+photo_extraction keywords jpg,jpeg,png,bmp

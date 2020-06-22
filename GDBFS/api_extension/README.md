@@ -14,6 +14,29 @@ result = api_top.get_keywords_properties(<filepath>)
 # 输出
 {'keywords': ['kaggle', 'google', 'ceo anthony goldbloom', 'san francisco', 'ceo anthony', 'data', 'co-founder ceo anthony', 'platform', 'anthony goldbloom declined', 'francisco this week', 'machine learning', 'service', 'acquiring kaggle', 'machine', 'learning', 'conference in san', 'goldbloom', 'ben hamner', 'cloud', 'competition'], 'properties': {'file_size': 2290, 'file_create_time': '2020-06-09T14:52:27', 'file_modified_time': '2020-06-09T14:52:27', 'file_accessed_time': '2020-06-11T17:13:13', 'file_create_location': None}}
 ```
+### 关于插件
+目前api部分的调用已经可以使用插件了  
+插件的使用方法如下  
++ **若该插件是识别keywords的，则该插件必须有get_keywords函数；若是识别properties的，则必须有get_properties函数**
++ 把插件文件`foo.py`放入`api_functions`文件夹  
++ 修改`api_extension/config.txt`  
+
+config.txt的文件格式为`[pluginName] [properties/keywords] [filename_extension1,filename_extension2.../all]`  
++ `[pluginName]`代表插件文件的名字，例如`foo.py`可以写成`foo`或`foo.py`  
++ `[properties/keywords]`代表该插件可以解析的文件信息种类，如果该插件是解析keywords的就填入keywords  
++ `[filename_extension1,filename_extension2.../all]`代表该插件可以解析的文件后缀，用','隔开，例如`foo.py`插件可以解析docx和txt文件，则填入docx,txt；如果该插件可以解析任意文件，则填入all  
+#### 示例
+`foo.py`文件可以解析docx和txt文件的keywords  
+```
+# 项目结构
+|- api_extension  
+    |- foo.py  
+# config.txt文件
+foo keywords docx,txt
+```
+<font color=red size=3>**Attention**</font>  
+config.txt文件中要严格按照三项填入，项与项之间用一个空格隔开，filename_extension之间用一个','隔开
+
 ### 所需的python库  
 requests  
 os  
@@ -27,10 +50,11 @@ re
 exifread  
 geopy  
 time  
-docx
+docx  
+importlib
 
 <font color=red size=3>**Attention**</font>  
-该函数目前能实现对txt、jpeg、jpg、bmp、png的关键字提取，以及其他文件的属性提取  
+该函数目前能实现对txt、docx、jpeg、jpg、bmp、png的关键字提取，以及其他文件的属性提取  
 该函数不会返回None，keywords只会返回空列表，file_information返回值见[file_information_extractor](#note-for-file_information_extractor)的说明  
 
 ## Note for yake
