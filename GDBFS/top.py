@@ -16,7 +16,7 @@ def main(yourkey, atime, ctime, mtime):
     graph = Graph("bolt://localhost:7687")
     # Here is a sample for FileNode
     neo4j_txt = neobase.FileNode(r'sample_files/neo4j.txt')
-    neo4j_txt.update_info(other_keywords=['neo4j'])
+    neo4j_txt.update_info(other_keywords={'neo4j'})
     neo4j_txt.merge_into(graph)
     # Note that this picture processing costs much time.
     '''

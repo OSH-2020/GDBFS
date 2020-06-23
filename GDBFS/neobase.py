@@ -2,98 +2,150 @@ import py2neo
 from py2neo import *
 from py2neo.ogm import *
 from api_extension import api_top
-from typing import List
+from typing import *
 import os
+from pprint import pprint
+import logging
 
-
-class FileNode(Node):
+class FileNode:
     RELATES_TO = Relationship.type('RELATES_TO')
+    property_keys = {'name', 'path', 'cTime', 'mTime', 'aTime', 'size'}
 
-    def __init__(self, file_path, keywords=None, labels=None, properties=None, auto_update=False):
+    def __init__(self, file_path=None, node=None, properties=None, keywords=None, labels=None, auto_update=False):
         """
-        :param file_path: The full path of the file.
-        :type file_path: str
-        :param keywords: The other keywords needed to be added.
-        :type keywords: list(str)
-        :param labels: The list of labels for this node. 'File' by default
-        :type labels: list
         :param properties: A dict indicating the other properties needed to be specified. None by default
         :type properties: dict
+        :param keywords: The other keywords needed to be added.
+        :type keywords: set[str]
+        :param labels: The list of labels for this node. 'File' by default
+        :type labels: List[str]
         :param auto_update: Whether update the file's info according to given path
         :type auto_update: bool
         """
-        labels = ('File',) if labels is None else set(labels)
-        self.keywords = [] if keywords is None else keywords
-        self.properties = {} if properties is None else properties
+        # ====================Set Basic Variables of FileNode====================
+        labels = ('File',) if labels is None else list(labels)
+        # FileNode.node
+        if node:
+            self.node = node
+        else:
+            self.node = Node(*labels)
+        self.node.update(properties)
+        if file_path:
+            self.node.update({'path': file_path})
+        # The keywords as set
+        self.keywords = set() if keywords is None else set(keywords)
+        # The keyword nodes
+        self.keyword_nodes = None
+        # The subgraph depicting the relationships
+        self.relationships = None
+        # ====================Update Variables====================
+        # Update self.keywords, keywords_nodes and relationships according to API
         if auto_update:
             self.update_info()
-        super(FileNode, self).__init__(*labels, **self.properties)
-        self.file_path = file_path
-        self.node_with_keynodes = None
-        self.keyword_nodes = None
-        self.update_node_with_keynodes()
+
+    def update_properties(self, properties=None):
+        if properties is None:
+            properties = api_top.get_keywords_properties(self.node['path'], PM_code=2)['properties']
+        properties = {key: properties[key] for key in properties.keys() if key in FileNode.property_keys}
+        self.node.update(properties)
+
+    def update_keywords(self, keywords=None, keys_limit=5, filename_extension_specified=None):
+        """
+        :param filename_extension_specified: specify the file type
+        :type filename_extension_specified: str
+        :param keys_limit: limit of keywords
+        :type keys_limit: int
+        :param keywords: keywords needed to be added, if None, use api.
+        :type keywords: set
+        :return node: The node of the file.
+        :rtype node: py2neo.data.Node
+        """
+        if not keywords:
+            keywords = api_top.get_keywords_properties(self.node['path'], keys_limit,
+                                                       filename_extension_specified, PM_code=1)['keywords']
+        self.keywords |= set(keywords)
+        self.update_keyword_nodes()
+
+    def update_keyword_nodes(self):
+        keyword_nodes = []
+        for keyword in self.keywords:
+            keyword_nodes.append(Node('Keyword', name=keyword))
+        self.keyword_nodes = Subgraph(keyword_nodes) if keyword_nodes != [] else None
+
+    def update_relationships(self):
+        self.update_keyword_nodes()
+        relationships = self.node
+        if type(self.keyword_nodes) is not Subgraph:
+            return
+        for keyword_node in self.keyword_nodes.nodes:
+            relationships |= FileNode.RELATES_TO(self.node, keyword_node)
+        self.relationships = relationships
+
+    def update_info(self, other_properties=None, other_keywords=None, keys_limit=5, filename_extension_specified=None):
+        # update with api
+        self.update_keywords()
+        self.update_properties()
+        # update with given values
+        if other_properties:
+            self.update_properties(properties=other_properties)
+        if other_keywords:
+            self.update_keywords(keywords=set(other_keywords))
+        # update subgraphs
+        self.update_relationships()
 
     def merge_into(self, graph):
         """
         :param graph: The graph which the nodes and relationships to be merged into.
         :type graph: py2neo.database.Graph
         """
-        graph.merge(self, 'File', 'path')
-        if self.keyword_nodes is not None:
-            graph.merge(self.keyword_nodes, 'Keyword', 'name')
-        if self.node_with_keynodes is not None:
-            graph.merge(self.node_with_keynodes)
+        logging.warning(" The merge_into() is obsolete! Use push_into() instead!"
+                        " You can samply replace all merge_into() with push_into().")
+        if self.node:
+            graph.merge(self.node, 'File', 'path')
+        if self.relationships:
+            graph.merge(self.relationships, 'Keyword', 'name')
 
-    def update_node_with_keynodes(self):
+    def push_into(self, graph, update_key=False, delete_node=False):
         """
-        update node_with_keynodes
+        Use push_into! Because, you can
+            1. specify whether delete the obsolete keys;
+            2. specify whether to delete the node with a same path. This is important in editor's saving operation.
+        :param graph: The graph which the nodes and relationships to be merged into.
+        :param update_key: if True, delete the node's keys which are not in self.keywords
+        :param delete_node: if True, delete the node with same path
         """
-        subgraph = self
-        if not self.keywords:
-            return subgraph
-        # Here we always use 'name' to identify the nodes,
-        # because it'll be printed by default
-        keyword_nodes = [Node('Keyword', name=keyword) for keyword in self.keywords]
-        for kw_node in keyword_nodes:
-            subgraph |= FileNode.RELATES_TO(self, kw_node)
-        self.node_with_keynodes = subgraph
-        self.keyword_nodes = Subgraph(keyword_nodes)
+        # remove the same path's node
+        if delete_node:
+            delete_file(graph, self.node['path'])
 
-    def update_info(self, keys_limit=5, other_keywords=None, other_properties=None, filename_extension_specified=None):
-        """
-        :param filename_extension_specified: specify the file type
-        :type filename_extension_specified: str
-        :param keys_limit: limit of keywords
-        :type keys_limit: int
-        :param other_keywords: Other keywords needed to be added
-        :type other_keywords: list
-        :param other_properties: A dict indicating the other properties need to be specified. None by default
-        :type other_properties: dict
-        :return node: The node of the file.
-        :rtype node: py2neo.data.Node
-        """
-        if other_properties is None:
-            other_properties = {}
-        file_info = api_top.get_keywords_properties(self.file_path, keys_limit, filename_extension_specified)
-        self.keywords = list(set(file_info['keywords'])
-                             | set(other_keywords if other_keywords is not None else []))
-        self.properties.update(file_info['properties'])
-        self.properties.update(other_properties)
-        super(FileNode, self).__init__(*self.labels, **self.properties)
-        self.update_node_with_keynodes()
+        # delete the original keyword nodes
+        if update_key:
+            cypher = """
+MATCH (f:File)-[r]->(k:Keyword)
+WHERE ID(f) = {id}
+    WITH r, k
+        WHERE NOT k.name IN {keywords}
+            DELETE r
+            WITH k
+                WHERE NOT EXISTS((k) < --())
+                    DELETE k""".format(id=self.node.identity, keywords=cypher_repr(list(self.keywords)))
+            graph.run(cypher)
+            self.merge_into(graph)
+
+        if self.node:
+            graph.merge(self.node, 'File', 'path')
+        if self.relationships:
+            graph.merge(self.relationships, 'Keyword', 'name')
 
     @staticmethod
     def from_record(record):
         keys = record['keys']
-        node = record.to_subgraph()
-        file_node = FileNode(file_path=node['path'],
-                             properties=dict(node),
-                             keywords=keys)
-        file_node.__dict__.update(node.__dict__)
+        node = record['f']
+        file_node = FileNode(node=node, keywords=set(keys))
         return file_node
 
 
-def get_files(graph: Graph, keywords: list, file_properties: dict) -> List[FileNode]:
+def get_files(graph: Graph, keywords=None, file_properties=None) -> List[FileNode]:
     """
     :param graph: The Graph from the database
     :param keywords: The associated keywords
@@ -101,6 +153,11 @@ def get_files(graph: Graph, keywords: list, file_properties: dict) -> List[FileN
     :return files: The list of files' property
     """
     # Deal with time constraints
+    if not keywords:
+        keywords = []
+    if not file_properties:
+        file_properties = {}
+
     def time_cypher_repr(span):
         begin = 'DATETIME(f.cTime) >= DATETIME("{}")'.format(span[0]) if span[0] is not None else 'TRUE'
         end = 'DATETIME(f.cTime) <= DATETIME("{}")'.format(span[1]) if span[1] is not None else 'TRUE'
@@ -133,7 +190,6 @@ WHERE kw.name in {keywords} {other_constraint}
         MATCH (f)-->(keys)
         RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr(keywords),
                                                                     other_constraint=constraint_cypher)
-    # print(cypher)
     result = graph.run(cypher)
     file_nodes = []
     for record in result:
