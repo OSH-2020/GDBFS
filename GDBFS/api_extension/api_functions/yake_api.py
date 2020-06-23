@@ -9,15 +9,10 @@ import logging
 # 目前该函数返回的置信系数时乱序的
 def get_keywords(filepath, specified_extension=None):
     logging.info("yake:ready to extract %s", filepath)
-<<<<<<< HEAD
-    filename_extension = filepath.split('.')[-1].lower()
-    text = ''
-=======
     if specified_extension is None:
         filename_extension = filepath.split('.')[-1].lower()
     else:
         filename_extension = specified_extension
->>>>>>> a21dcefb1ea5aaebc05e7ffdcd7d64f7c9f24625
     try:
         if filename_extension == 'txt':
             with open(filepath, 'r', encoding='utf-8') as f:
@@ -34,7 +29,6 @@ def get_keywords(filepath, specified_extension=None):
     except Exception as err:
         logging.error("yake:unexpect error %s happened,when open file %s", err, filepath)
         text = ''
-    print(text)
     keywords = extract_keywords(text)
     return keywords
 
