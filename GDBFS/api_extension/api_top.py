@@ -8,7 +8,8 @@ import importlib
 
 # TODO:增加关键词判优函数，增加API数量，通过不同API返回关键词的比较和综合，得到最终关键词列表
 # TODO:增加音乐、视频等的识别
-def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specified=None):
+# PM_code专为测试准备，PM_code=1,则只运行keywords，PM_code=2,只运行properties,PM_code=3则两者都运行
+def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specified=None, PM_code=3):
     keywords = {}
     properties = {}
     # 获取文件后缀
@@ -34,12 +35,12 @@ def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specifie
                 continue
             # 加载模块
             module = importlib.import_module('.', attr[0].replace('.py', ''))
-            if(attr[1] == 'keywords'):
+            if((attr[1] == 'keywords') and (PM_code&1)):
                 for extension in adapted_filename_extension:
                     if (extension == filename_extension) or (extension == 'all'):
                         keywords = {**keywords, **module.get_keywords(filepath)}
                         break
-            elif(attr[1] == 'properties'):
+            elif((attr[1] == 'properties') and (PM_code&2)):
                 for extension in adapted_filename_extension:
                     if (extension == filename_extension) or (extension == 'all'):
                         properties = {**properties, **module.get_properties(filepath)}
