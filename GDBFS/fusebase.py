@@ -163,7 +163,7 @@ class GDBFSFuse(Operations):
             graph = Graph("bolt://localhost:7687")
             file = neobase.FileNode(full_path)
             file.update_info()
-            file.merge_into(graph)
+            file.push_into(graph)
         else:
             print('[flush] This file({}) has not been writen!'.format(path))
 
@@ -183,4 +183,4 @@ def mount_gdbfs(mount_point):
 
 
 if __name__ == '__main__':
-    mount_gdbfs(sys.argv[1])
+    mount_gdbfs('mnt')

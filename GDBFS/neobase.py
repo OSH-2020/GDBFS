@@ -7,6 +7,7 @@ import os
 from pprint import pprint
 import logging
 
+
 class FileNode:
     RELATES_TO = Relationship.type('RELATES_TO')
     property_keys = {'name', 'path', 'cTime', 'mTime', 'aTime', 'size'}
@@ -43,9 +44,11 @@ class FileNode:
         if auto_update:
             self.update_info()
 
-    def update_properties(self, properties=None):
+    def update_properties(self, properties=None, filename_extension_specified=None):
         if properties is None:
-            properties = api_top.get_keywords_properties(self.node['path'], PM_code=2)['properties']
+            properties = api_top.get_keywords_properties(self.node['path'],
+                                                         filename_extension_specified=filename_extension_specified,
+                                                         PM_code=2)['properties']
         properties = {key: properties[key] for key in properties.keys() if key in FileNode.property_keys}
         self.node.update(properties)
 
@@ -61,8 +64,10 @@ class FileNode:
         :rtype node: py2neo.data.Node
         """
         if not keywords:
-            keywords = api_top.get_keywords_properties(self.node['path'], keys_limit,
-                                                       filename_extension_specified, PM_code=1)['keywords']
+            keywords = api_top.get_keywords_properties(filepath=self.node['path'],
+                                                       keys_limit=keys_limit,
+                                                       filename_extension_specified=filename_extension_specified,
+                                                       PM_code=1)['keywords']
         self.keywords |= set(keywords)
         self.update_keyword_nodes()
 
@@ -83,13 +88,15 @@ class FileNode:
 
     def update_info(self, other_properties=None, other_keywords=None, keys_limit=5, filename_extension_specified=None):
         # update with api
-        self.update_keywords()
+        self.update_keywords(keys_limit=keys_limit, filename_extension_specified=filename_extension_specified)
         self.update_properties()
         # update with given values
+        if other_keywords:
+            self.update_keywords(keywords=set(other_keywords),
+                                 keys_limit=keys_limit,
+                                 filename_extension_specified=filename_extension_specified)
         if other_properties:
             self.update_properties(properties=other_properties)
-        if other_keywords:
-            self.update_keywords(keywords=set(other_keywords))
         # update subgraphs
         self.update_relationships()
 
@@ -236,7 +243,7 @@ OPTIONAL MATCH (new)-[r: RELATES_TO]->(k:Keyword)
     delete_file(graph, old)
     # Update
     file_node = FileNode(old)
-    file_node.update_info(filename_extension_specified=os.path.splitext(new)[1][1:],
-                          other_properties={'path': new,
-                                            'name': os.path.split(new)[1]})
-    file_node.merge_into(graph)
+    file_node.update_info(filename_extension_specified=os.path.splitext(new)[1][1:])
+    file_node.update_properties({'path': new, 'name': os.path.split(new)[1]})
+    file_node.update_relationships()
+    file_node.push_into(graph)

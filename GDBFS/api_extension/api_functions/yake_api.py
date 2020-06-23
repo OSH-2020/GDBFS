@@ -43,6 +43,7 @@ def extract_keywords(text):
     if state == 1:
         try:
             kw_extractor = yake.KeywordExtractor()
+            print(text.__class__, len(text), text)
             keywords = kw_extractor.extract_keywords(text)
             # 统一数据结构
             length = len(keywords)
