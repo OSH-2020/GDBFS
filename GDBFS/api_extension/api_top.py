@@ -38,12 +38,12 @@ def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specifie
             if((attr[1] == 'keywords') and (PM_code&1)):
                 for extension in adapted_filename_extension:
                     if (extension == filename_extension) or (extension == 'all'):
-                        keywords = {**keywords, **module.get_keywords(filepath)}
+                        keywords = {**keywords, **module.get_keywords(filepath,specified_extension=filename_extension_specified)}
                         break
             elif((attr[1] == 'properties') and (PM_code&2)):
                 for extension in adapted_filename_extension:
                     if (extension == filename_extension) or (extension == 'all'):
-                        properties = {**properties, **module.get_properties(filepath)}
+                        properties = {**properties, **module.get_properties(filepath,specified_extension=filename_extension_specified)}
                         break
     return {'keywords': list(keywords.keys())[:keys_limit], 'properties': properties}
 

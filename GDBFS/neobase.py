@@ -64,8 +64,6 @@ class FileNode:
         :rtype node: py2neo.data.Node
         """
         if not keywords:
-            print(self.node['path'], '\t', filename_extension_specified)
-            # os.system('head -n 5 {}'.format(self.node['path']))
             keywords = api_top.get_keywords_properties(filepath=self.node['path'],
                                                        keys_limit=keys_limit,
                                                        filename_extension_specified=filename_extension_specified,
@@ -249,6 +247,3 @@ OPTIONAL MATCH (new)-[r: RELATES_TO]->(k:Keyword)
     file_node.update_properties({'path': new, 'name': os.path.split(new)[1]})
     file_node.update_relationships()
     file_node.push_into(graph)
-    # os.system('cat {}'.format(old))
-    print(file_node.keywords)
-    print(file_node.keyword_nodes)

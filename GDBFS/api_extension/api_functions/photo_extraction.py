@@ -9,7 +9,7 @@ import logging
 
 
 # 通用物体和场景识别
-def get_keywords(filepath):
+def get_keywords(filepath, specified_extension = None):
     request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general"
     try:
         # 二进制方式打开文件
