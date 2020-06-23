@@ -10,6 +10,7 @@ import logging
 def get_keywords(filepath):
     logging.info("yake:ready to extract %s", filepath)
     filename_extension = filepath.split('.')[-1].lower()
+    text = ''
     try:
         if filename_extension == 'txt':
             with open(filepath, 'r', encoding='utf-8') as f:
@@ -26,6 +27,7 @@ def get_keywords(filepath):
     except Exception as err:
         logging.error("yake:unexpect error %s happened,when open file %s", err, filepath)
         text = ''
+    print(text)
     keywords = extract_keywords(text)
     return keywords
 
@@ -37,6 +39,7 @@ def extract_keywords(text):
     if state == 1:
         try:
             kw_extractor = yake.KeywordExtractor()
+            print(text.__class__, len(text), text)
             keywords = kw_extractor.extract_keywords(text)
             # 统一数据结构
             length = len(keywords)
