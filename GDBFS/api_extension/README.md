@@ -17,25 +17,27 @@ result = api_top.get_keywords_properties(<filepath>)
 ### 关于插件
 目前api部分的调用已经可以使用插件了  
 插件的使用方法如下  
-+ **若该插件是识别keywords的，则该插件必须有get_keywords函数；若是识别properties的，则必须有get_properties函数**
++ **若该插件是识别keywords的，则该插件必须有get_keywords函数；若是识别properties的，则必须有get_properties函数**  
++ get_keywords函数和get_properties函数都必须有且仅有两个参数，分别是filepath[用于接收要解析文件的绝对路径]，specified_extension[用于接收要解析的文件的类型，通常为后缀名]  
++ **判断文件类型是否可以解析的部分需要自己在api中定义，并通过specified_extension参数判断，如果该文件类型不能被api所解析，则需要返回空字典{}**  
 + 把插件文件`foo.py`放入`api_functions`文件夹  
 + 修改`api_extension/config.txt`  
 
-config.txt的文件格式为`[pluginName] [properties/keywords] [filename_extension1,filename_extension2.../all]`  
+config.txt的文件格式为`[pluginName] [properties/keywords]`  
 + `[pluginName]`代表插件文件的名字，例如`foo.py`可以写成`foo`或`foo.py`  
 + `[properties/keywords]`代表该插件可以解析的文件信息种类，如果该插件是解析keywords的就填入keywords  
-+ `[filename_extension1,filename_extension2.../all]`代表该插件可以解析的文件后缀，用','隔开，例如`foo.py`插件可以解析docx和txt文件，则填入docx,txt；如果该插件可以解析任意文件，则填入all  
 #### 示例
 `foo.py`文件可以解析docx和txt文件的keywords  
 ```
 # 项目结构
+|- config.txt  
 |- api_extension  
     |- foo.py  
 # config.txt文件
-foo keywords docx,txt
+foo keywords
 ```
 <font color=red size=3>**Attention**</font>  
-config.txt文件中要严格按照三项填入，项与项之间用一个空格隔开，filename_extension之间用一个','隔开
+config.txt文件中要严格按照两项填入，项与项之间用一个空格隔开  
 
 ### 所需的python库  
 requests  

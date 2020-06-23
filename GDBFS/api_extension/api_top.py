@@ -27,24 +27,14 @@ def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specifie
             if not line:
                 break
             attr = line.strip().split(' ')
-            if len(attr) < 3:
-                continue
-            # 解析可以进行信息提取的文件拓展名列表
-            adapted_filename_extension = attr[2].split(',')
-            if not adapted_filename_extension:
+            if len(attr) < 2:
                 continue
             # 加载模块
             module = importlib.import_module('.', attr[0].replace('.py', ''))
             if((attr[1] == 'keywords') and (PM_code&1)):
-                for extension in adapted_filename_extension:
-                    if (extension == filename_extension) or (extension == 'all'):
-                        keywords = {**keywords, **module.get_keywords(filepath,specified_extension=filename_extension_specified)}
-                        break
+                keywords = {**keywords, **module.get_keywords(filepath,specified_extension=filename_extension)}
             elif((attr[1] == 'properties') and (PM_code&2)):
-                for extension in adapted_filename_extension:
-                    if (extension == filename_extension) or (extension == 'all'):
-                        properties = {**properties, **module.get_properties(filepath,specified_extension=filename_extension_specified)}
-                        break
+                properties = {**properties, **module.get_properties(filepath,specified_extension=filename_extension)}
     return {'keywords': list(keywords.keys())[:keys_limit], 'properties': properties}
 
 

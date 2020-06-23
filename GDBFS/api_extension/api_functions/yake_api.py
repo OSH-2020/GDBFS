@@ -8,6 +8,9 @@ import logging
 # TODO: 把该函数改为class形式，并取消state参数设置，通过上层函数调用不同的对象函数来控制online api或offline api
 # 目前该函数返回的置信系数时乱序的
 def get_keywords(filepath, specified_extension=None):
+    if((specified_extension != 'txt') and (specified_extension != 'docx')):
+        logging.debug("%s can't be extracted by yake,filename_extension is %s", filepath, specified_extension)
+        return {}
     logging.info("yake:ready to extract %s", filepath)
     if specified_extension is None:
         filename_extension = filepath.split('.')[-1].lower()

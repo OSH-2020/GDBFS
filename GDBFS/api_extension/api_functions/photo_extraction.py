@@ -9,7 +9,10 @@ import logging
 
 
 # 通用物体和场景识别
-def get_keywords(filepath, specified_extension = None):
+def get_keywords(filepath, specified_extension=None):
+    if((specified_extension != 'jpg') and (specified_extension != 'jpeg') and (specified_extension != 'bmp') and (specified_extension != 'png')):
+        logging.debug("%s can't be extracted by photo_extraction, filename_extension is %s", filepath, specified_extension)
+        return {}
     request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general"
     try:
         # 二进制方式打开文件
