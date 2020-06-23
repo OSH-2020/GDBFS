@@ -18,8 +18,8 @@ result = api_top.get_keywords_properties(<filepath>)
 目前api部分的调用已经可以使用插件了  
 插件的使用方法如下  
 + **若该插件是识别keywords的，则该插件必须有get_keywords函数；若是识别properties的，则必须有get_properties函数**  
-+ get_keywords函数和get_properties函数都必须有且仅有两个参数，分别是filepath[用于接收要解析文件的绝对路径]，specified_extension[用于接收要解析的文件的类型，通常为后缀名]  
-+ **判断文件类型是否可以解析的部分需要自己在api中定义，并通过specified_extension参数判断，如果该文件类型不能被api所解析，则需要返回空字典{}**  
++ get_keywords函数和get_properties函数都必须有且仅有两个参数，分别是filepath[用于接收要解析文件的绝对路径]，filename_extension[用于接收要解析的文件的类型，通常为后缀名]  
++ **判断文件类型是否可以解析的部分需要自己在api中定义，并通过filename_extension参数判断，如果该文件类型不能被api所解析，则需要返回空字典{}**  
 + 把插件文件`foo.py`放入`api_functions`文件夹  
 + 修改`api_extension/config.txt`  
 

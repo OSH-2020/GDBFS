@@ -9,9 +9,9 @@ import logging
 
 
 # 通用物体和场景识别
-def get_keywords(filepath, specified_extension=None):
-    if((specified_extension != 'jpg') and (specified_extension != 'jpeg') and (specified_extension != 'bmp') and (specified_extension != 'png')):
-        logging.debug("%s can't be extracted by photo_extraction, filename_extension is %s", filepath, specified_extension)
+def get_keywords(filepath, filename_extension=None):
+    if((filename_extension != 'jpg') and (filename_extension != 'jpeg') and (filename_extension != 'bmp') and (filename_extension != 'png')):
+        logging.debug("%s can't be extracted by photo_extraction, filename_extension is %s", filepath, filename_extension)
         return {}
     request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general"
     try:

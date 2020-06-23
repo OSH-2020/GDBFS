@@ -32,9 +32,9 @@ def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specifie
             # 加载模块
             module = importlib.import_module('.', attr[0].replace('.py', ''))
             if((attr[1] == 'keywords') and (PM_code&1)):
-                keywords = {**keywords, **module.get_keywords(filepath,specified_extension=filename_extension)}
+                keywords = {**keywords, **module.get_keywords(filepath,filename_extension=filename_extension)}
             elif((attr[1] == 'properties') and (PM_code&2)):
-                properties = {**properties, **module.get_properties(filepath,specified_extension=filename_extension)}
+                properties = {**properties, **module.get_properties(filepath,filename_extension=filename_extension)}
     return {'keywords': list(keywords.keys())[:keys_limit], 'properties': properties}
 
 
