@@ -211,23 +211,31 @@ def delete_file(graph: Graph, path: str):
     """
     cypher = """
 MATCH (f: File {properties})
-    OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
-        DELETE r, f
-        WITH k
-            WHERE NOT EXISTS((k) < --())
-                DELETE k""".format(properties=cypher_repr({'path': path}))
+OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
+    DELETE r, f
+    WITH k
+        WHERE NOT EXISTS((k) < --())
+            DELETE k""".format(properties=cypher_repr({'path': path}))
     graph.run(cypher)
 
 
-def rename_file(graph: Graph, old: str, new: str):
+def rename_file(graph: Graph, old: str, new: str, light_rename=False):
     """
     :param graph: The Graph from the database
     :param old: The old path(must be full path)
     :param new: The new path(must be full path)
+    :param light_rename: Only rename the file, without re-request the keywords(But still update the properties).
     """
-    if old[0] != '/' or new[0] != '/':
-        print('not real path')
+    if light_rename:
+        # TODO: I haven't tested this mode.
+        cypher = "MATCH (f:File {{path:{old_path}}}) RETURN f".format(old_path=old)
+        result = graph.run(cypher)
+        for record in result:
+            file_node = FileNode.from_record(record=record)
+            file_node.update_properties({'path': new, 'name': os.path.split(new)[1]})
+            file_node.push_into(graph)
         return
+
     # Remove the original one
     cypher = """
 OPTIONAL MATCH (new:File {{path:{new_path}}})
@@ -236,8 +244,7 @@ OPTIONAL MATCH (new)-[r: RELATES_TO]->(k:Keyword)
         DELETE new, r
         WITH k
             WHERE NOT EXISTS((k) < --())
-                DELETE k""".format(old_path=cypher_repr(old),
-                                   new_name=cypher_repr(os.path.split(new)[1]),
+                DELETE k""".format(new_name=cypher_repr(os.path.split(new)[1]),
                                    new_path=cypher_repr(new))
     graph.run(cypher)
     delete_file(graph, old)
