@@ -204,18 +204,22 @@ WHERE kw.name in {keywords} {other_constraint}
     return file_nodes
 
 
-def delete_file(graph: Graph, path: str):
+def delete_file(graph: Graph, path: str, properties=None):
     """
     :param graph: The Graph from the database
     :param path: The path of the file to delete
+    :param properties: Other properties needed to be specified.
     """
+    if properties is None:
+        properties = {}
+    properties['path'] = path
     cypher = """
 MATCH (f: File {properties})
 OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
     DELETE r, f
     WITH k
         WHERE NOT EXISTS((k) < --())
-            DELETE k""".format(properties=cypher_repr({'path': path}))
+            DELETE k""".format(properties=cypher_repr(properties))
     graph.run(cypher)
 
 
