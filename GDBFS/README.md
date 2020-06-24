@@ -44,24 +44,26 @@ python top.py "a document about neo4j"
 #### :class FileNode:
 通过给出文件路径等信息, 可以构造该类对象.
 ##### 方法说明
-###### get_subgraph()
-返回值:
-1. 文件结点和关键词结点及其之间关系
-2. 关键词结点
-###### merge_into()
+###### :function push_into():
+方法原型:
+```
+def push_into(self, graph, update_key=False, delete_node=False)
+```
 将文件结点, 关键词结点及其间关系提交到数据库里.
+**注**: 原来的`merge_into()`已弃用. 改用push_into的时候不需要作任何其他修改, 直接将所有merge_into()改为push_into()即可.
 #### :Function get_files:
 函数原型:
 ```python
-get_files(graph: Graph, keywords: list, file_properties: dict) -> list
+def get_files(graph: Graph, keywords=None, file_properties=None) -> List[FileNode]
 ```
 调用该函数, 能返回图`graph`中满足与`keywords`相邻且满足`file_properties`中条件的文件信息列表(其元素为`dict`)
 #### :Function delete_file:
 函数原型:
 ```python
-def delete_file(graph: Graph, path: str)
+def delete_file(graph: Graph, path: str, properties=None)
 ```
-将路径为`path`的文件结点从数据库中删除, 并且相邻关键词结点若已孤立则也删除.
+- 将路径为`path`的文件结点从数据库中删除, 并且相邻关键词结点若已孤立则也删除.
+- 如需要给出其他属性, 可以用`properties`参数给出. 但`path`是必须给出的, 因为将会根据path做索引.
 
 ### UsrInputConv.py
 提供了类`KeyWord`，类内包含转换后的`keywords`，`atime`,`ctime`,`mtime`,均以list类型呈现  

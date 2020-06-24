@@ -102,6 +102,7 @@ class FileNode:
 
     def merge_into(self, graph):
         """
+        This method is obsolete. Please use push_into() instead.
         :param graph: The graph which the nodes and relationships to be merged into.
         :type graph: py2neo.database.Graph
         """
