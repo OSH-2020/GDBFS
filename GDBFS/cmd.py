@@ -37,8 +37,6 @@ def main():
     while(True):
         str = input("# ")
         argv = str.split()
-        if(str == '\n'):
-            break
 
         try:
             """
@@ -63,14 +61,11 @@ def main():
 
         # 处理args列表,假设只有两个元素，第一个是操作，第二个是文件名
         if(args[0] == 'add'):
-            add(args[1], option)
-            
+            add(args[1], option)            
         elif(args[0] == 'rm'):
-            rm(args[1], option)
-            
+            rm(args[1], option)           
         elif(args[0] == 'open'):
-            open(args[1], option)
-            
+            open(args[1], option)           
 
 if __name__ == "__main__":
     main()
