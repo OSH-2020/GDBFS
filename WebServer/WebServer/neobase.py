@@ -189,14 +189,16 @@ def get_files(graph: Graph, keywords=None, file_properties=None) -> List[FileNod
     constraint_cypher += ('f.name = "{}"'.format(file_properties['name'])) \
         if 'name' in file_properties else ''
 
+    key_constraint = "kw.name in {keywords} AND ".format(keywords=cypher_repr(keywords)) \
+        if len(keywords) > 0 else ''
     # TODO: size constraint seems to be useless, so I didn't add it
 
     cypher = """
 MATCH (f:File)-->(kw:Keyword)
-WHERE kw.name in {keywords} OR {other_constraint}
+WHERE {key_constraint} {other_constraint}
     WITH DISTINCT f
         MATCH (f)-->(keys)
-        RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr(keywords),
+        RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(key_constraint=key_constraint,
                                                                     other_constraint=constraint_cypher)
     print(cypher)
     result = graph.run(cypher)
