@@ -4,7 +4,7 @@
     <title>GDBFS</title>
     <script src="/statics/js/jquery-3.5.1.js"></script>
     <script src="/statics/js/d3.js"></script>
-    <script src="/statics/js/getFiles.js"></script>
+    <script src="/statics/js/drawGraph.js"></script>
     <script>
     $.ajaxSetup({
         data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
@@ -37,7 +37,7 @@
         </tr>
         <tr>
             <td colspan="2">
-                <button id="submitButton" onclick="return false;">Submit</button>
+                <button id="findButton" onclick="return false;">find</button>
             </td>
         </tr>
     </table>
@@ -45,9 +45,12 @@
 
 <svg width="960" height="600"></svg>
 <script>
-    $("#submitButton").click(function () {
+    $("#findButton").click(function () {
+        d3.select("svg")
+            .selectAll("*")
+            .remove();
         $.ajax({
-            url: '/submit',
+            url: '/find_files',
             type: 'post',
             data: {
                 description: $("#description").val(),
@@ -56,9 +59,6 @@
                 atime: $("#atime").val(),
             },
             success: function (data) {
-                d3.select("svg")
-                    .selectAll("*")
-                    .remove();
                 draw(data['nodes'], data['edges']);
             },
         })

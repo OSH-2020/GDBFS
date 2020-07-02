@@ -25,4 +25,7 @@ GDBFS/api_extension/api_functions/*
 !sample/py2neo
 !sample/py2neo/py2neo.ipynb
 !WebServer/*
+WebServer/.idea
 WebServer/.idea/*
+WebServer/WebServer/__pycache__
+WebServer/WebServer/__pycache__/*

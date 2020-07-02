@@ -86,30 +86,30 @@ mtime:     [('2017-06-12T00:00:00', '2020-06-12T23:31:37')]
 ### cmd.py
 
 运行以下命令，进入 shell
-~~~shell 
+```shell 
 $ python3 cmd.py
-~~~
+```
 
 #### 添加文件
 
 将位于 `/home/ubuntu` 的 `test.txt` 加入 `/mnt` 文件夹
-~~~shell 
+```shell 
 # add /home/ubuntu/test.txt
-~~~
+```
 
 #### 删除文件
 
 将位于 `/mnt` 的 `test.txt` 删除
-~~~shell 
+```shell 
 # rm test.txt
-~~~
+```
 
 #### 打开文件
 
 将位于 `/mnt` 的 `test.txt` 按默认模式打开
-~~~shell 
+```shell 
 # open test.txt
-~~~
+```
 
 ## Fuse
 

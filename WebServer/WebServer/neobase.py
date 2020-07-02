@@ -173,27 +173,27 @@ def get_files(graph: Graph, keywords=None, file_properties=None) -> List[FileNod
 
     cTime_constraint = [time_cypher_repr(span) for span in file_properties['cTime']] \
         if 'cTime' in file_properties else []
-    cTime_constraint_cypher = (' AND ' + '({})'.format(' OR '.join(cTime_constraint))) \
+    cTime_constraint_cypher = ('({})'.format(' OR '.join(cTime_constraint))) \
         if cTime_constraint != [] else ''
     aTime_constraint = [time_cypher_repr(span) for span in file_properties['aTime']] \
         if 'aTime' in file_properties else []
-    aTime_constraint_cypher = (' AND ' + '({})'.format(' OR '.join(aTime_constraint))) \
+    aTime_constraint_cypher = ('({})'.format(' OR '.join(aTime_constraint))) \
         if aTime_constraint != [] else ''
     mTime_constraint = [time_cypher_repr(span) for span in file_properties['mTime']] \
         if 'mTime' in file_properties else []
-    mTime_constraint_cypher = (' AND ' + '({})'.format(' OR '.join(mTime_constraint))) \
+    mTime_constraint_cypher = ('({})'.format(' OR '.join(mTime_constraint))) \
         if mTime_constraint != [] else ''
-    constraint_cypher = cTime_constraint_cypher + aTime_constraint_cypher + mTime_constraint_cypher
+    constraint_cypher = 'AND'.join([cTime_constraint_cypher, aTime_constraint_cypher, mTime_constraint_cypher])
 
     # Deal with name constraint
-    constraint_cypher += (' AND ' + 'f.name = "{}"'.format(file_properties['name'])) \
+    constraint_cypher += ('f.name = "{}"'.format(file_properties['name'])) \
         if 'name' in file_properties else ''
 
     # TODO: size constraint seems to be useless, so I didn't add it
 
     cypher = """
 MATCH (f:File)-->(kw:Keyword)
-WHERE kw.name in {keywords} {other_constraint}
+WHERE kw.name in {keywords} OR {other_constraint}
     WITH DISTINCT f
         MATCH (f)-->(keys)
         RETURN f, ID(f) AS id, COLLECT(keys.name) AS keys""".format(keywords=cypher_repr(keywords),

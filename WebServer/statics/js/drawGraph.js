@@ -2,6 +2,7 @@
 // 新建一个力导向图
 var NODE_SIZE = 30
 var ARROW_SIZE = 7;
+var BOARD_WIDTH = 5;
 var forceSimulation;
 
 function draw(nodes, edges) {
@@ -12,6 +13,15 @@ function draw(nodes, edges) {
         .force("center",d3.forceCenter());
     var marge = {top:60,bottom:60,left:60,right:60}
     var svg = d3.select("svg")
+    svg.append("g")
+        .append("rect")
+        .attr("x", BOARD_WIDTH)
+        .attr("y", BOARD_WIDTH)
+        .attr("width", 960-BOARD_WIDTH*2)
+        .attr("height", 600-BOARD_WIDTH*2)
+        .attr("fill", "white")
+        .attr("strock", "red")
+        .attr("style", `outline: ${BOARD_WIDTH}px solid grey;`) ;
     var width = svg.attr("width")
     var height = svg.attr("height")
     var g = svg.append("g")
@@ -64,7 +74,8 @@ function draw(nodes, edges) {
         .attr("markerHeight", ARROW_SIZE)
         .attr("orient", "auto")
         .append("svg:path")
-        .attr("d", `M0,${-ARROW_SIZE} L${2*ARROW_SIZE},0 L0,${ARROW_SIZE}`);
+        .attr("d", `M0,${-ARROW_SIZE} L${2*ARROW_SIZE},0 L0,${ARROW_SIZE}`)
+        .attr("fill", "grey");
 
     // 绘制边
     var links = g.append("g")
@@ -87,7 +98,7 @@ function draw(nodes, edges) {
         })
 
     // 绘制节点
-    // 老规矩，先为节点和节点上的文字分组
+    // 先为节点和节点上的文字分组
     var gs = g.selectAll(".circleText")
         .data(nodes)
         .enter()
