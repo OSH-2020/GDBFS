@@ -1,5 +1,6 @@
 ﻿.vscode
 GDBFS/*
+sample/*
 !GDBFS/README.md
 !GDBFS/neobase.py
 !GDBFS/sample.py
@@ -21,3 +22,7 @@ GDBFS/api_extension/api_functions/*
 !GDBFS/sample_files
 !GDBFS/top.py
 !GDBFS/fusebase.py
+!sample/py2neo
+!sample/py2neo/py2neo.ipynb
+!WebServer/*
+WebServer/.idea/*

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GDBFS</title>
+    <script src="/statics/js/jquery-3.5.1.js"></script>
+    <script src="/statics/js/d3.js"></script>
+    <script src="/statics/js/getFiles.js"></script>
+    <script>
+    $.ajaxSetup({
+        data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
+    });
+    </script>
+</head>
+<body>
+
+<iframe id="submitFrame" style="display: none;width:0; height:0" name="submitFrame" src="about:blank"></iframe>
+
+<form id="inputForm" target="submitFrame"><fieldset style="width: 500px;">
+    {% csrf_token %}
+    <legend>查找文件</legend>
+    <table>
+        <tr>
+            <td>需操作的文件的描述</td>
+            <td><input type="text" name="description" id="description"/></td>
+        </tr>
+        <tr>
+            <td>ctime</td>
+            <td><input type="text" name="ctime" id="ctime"/></td>
+        </tr>
+        <tr>
+            <td>atime</td>
+            <td><input type="text" name="atime" id="atime"/></td>
+        </tr>
+        <tr>
+            <td>mtime</td>
+            <td><input type="text" name="mtime" id="mtime"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <button id="submitButton" onclick="return false;">Submit</button>
+            </td>
+        </tr>
+    </table>
+</fieldset></form>
+
+<svg width="960" height="600"></svg>
+<script>
+    $("#submitButton").click(function () {
+        $.ajax({
+            url: '/submit',
+            type: 'post',
+            data: {
+                description: $("#description").val(),
+                ctime: $("#ctime").val(),
+                mtime: $("#mtime").val(),
+                atime: $("#atime").val(),
+            },
+            success: function (data) {
+                d3.select("svg")
+                    .selectAll("*")
+                    .remove();
+                draw(data['nodes'], data['edges']);
+            },
+        })
+    })
+</script>
+
+
+</body>
+</html>

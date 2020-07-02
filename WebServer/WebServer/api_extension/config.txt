@@ -1,0 +1,3 @@
+yake_api keywords
+file_information_extractor properties
+photo_extraction keywords
