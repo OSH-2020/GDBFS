@@ -13,37 +13,113 @@
 </head>
 <body>
 
-<iframe id="submitFrame" style="display: none;width:0; height:0" name="submitFrame" src="about:blank"></iframe>
+<table border="1" width=100% height=150px id="opTable">
+  <!-- 查找操作表 -->
+  <tr><td width="28%">
+    <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
+    
+    <form id="inputForm" target="submitFrame"><fieldset>
+        {% csrf_token %}
+        <legend>查找文件</legend>
+        <table>
+            <tr>
+                <td>需操作的文件的描述</td>
+                <td><input type="text" name="description" id="description"/></td>
+            </tr>
+            <tr>
+                <td>ctime</td>
+                <td><input type="text" name="ctime" id="ctime"/></td>
+            </tr>
+            <tr>
+                <td>atime</td>
+                <td><input type="text" name="atime" id="atime"/></td>
+            </tr>
+            <tr>
+                <td>mtime</td>
+                <td><input type="text" name="mtime" id="mtime"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="findButton" onclick="return false;">find</button>
+                </td>
+            </tr>
+        </table>
+    </fieldset></form></td>
 
-<form id="inputForm" target="submitFrame"><fieldset style="width: 500px;">
-    {% csrf_token %}
-    <legend>查找文件</legend>
-    <table>
-        <tr>
-            <td>需操作的文件的描述</td>
-            <td><input type="text" name="description" id="description"/></td>
-        </tr>
-        <tr>
-            <td>ctime</td>
-            <td><input type="text" name="ctime" id="ctime"/></td>
-        </tr>
-        <tr>
-            <td>atime</td>
-            <td><input type="text" name="atime" id="atime"/></td>
-        </tr>
-        <tr>
-            <td>mtime</td>
-            <td><input type="text" name="mtime" id="mtime"/></td>
-        </tr>
-        <tr>
-            <td colspan="2">
-                <button id="findButton" onclick="return false;">find</button>
-            </td>
-        </tr>
-    </table>
-</fieldset></form>
+    <!-- 文件列表表格 -->
+    <td width="36%">
+    <table style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" height="100%" border=0>
+      <tr>
+        <td>
+          <table cellSpacing=1 cellPadding=0 width="100%" align=center summary="" border=0>
+              <TR>
+                <TD align=middle bgColor=#000080 colSpan=5><FONT color=#ffffff size=2>文件列表</FONT></TD>
+              </TR>
+              <TR>
+                <TD width="24%" bgColor=#6c95d0><FONT size=2>文件名</FONT></TD>
+                <TD width="24%" bgColor=#6c95d0><FONT size=2>ctime</FONT></TD>
+                <TD width="24%" bgColor=#6c95d0><FONT size=2>atime</FONT></TD>
+                <TD width="24%" bgColor=#6c95d0><FONT size=2>mtime</FONT></TD>
+                <TD width="4%"  bgColor=#6c95d0><FONT size=2>　</FONT></TD>
+              </TR>
+            </TABLE>
+        </TD>
+      </TR>
+      <TR>
+        <TD>
+            <DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 150px">
+              <TABLE style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=12 width="99%" id="fileTable">
+                <TR>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>aaaa</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
+                </TR>
+                <TR>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>bbbb</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
+                </TR>
+                <TR>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>cccc</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
+                </TR>
+                <TR>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>dddd</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
+                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
+                </TR>
+              </TABLE>
+            </DIV>
+        </TD>
+      </TR>
+    </TABLE></td>
+  </tr>
+</table>
 
-<svg width="960" height="600"></svg>
+<table border="1" width="100%" height="640">
+  <tr>
+    <td width="960" height="640">
+      <svg width="960" height="640"></svg>
+    </td>
+    <td width="window.screen.availWidth - 960">
+      <table border="1" height="100%" width="100%">
+        <tr height="70%">
+          <td colspan="3" id="fileInfo"></td>
+        </tr>
+        <tr height="30%">
+            <td><button width="50%" height="100%">打开</button></td>
+            <td><button width="50%" height="100%">删除</button></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
 <script>
     $("#findButton").click(function () {
         d3.select("svg")

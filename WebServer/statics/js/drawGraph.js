@@ -5,6 +5,9 @@ var NODE_SIZE = 30
 var ARROW_SIZE = 7;
 var BOARD_WIDTH = 5;
 
+var GRAPH_WIDTH = 960;
+var GRAPH_HEIGHT = 640;
+
 // 声明一个力导向图
 var forceSimulation;
 
@@ -19,17 +22,17 @@ function draw(nodes, edges) {
     // 构建SVG作图区域
     var marge = {top: 60,bottom: 60,left: 60,right: 60}
     var svg = d3.select("svg")
+    var width = svg.attr("width")
+    var height = svg.attr("height")
     svg.append("g")
         .append("rect")
         .attr("x", BOARD_WIDTH)
         .attr("y", BOARD_WIDTH)
-        .attr("width", 960-BOARD_WIDTH*2)
-        .attr("height", 600-BOARD_WIDTH*2)
+        .attr("width", width-BOARD_WIDTH*2)
+        .attr("height", height-BOARD_WIDTH*2)
         .attr("fill", "white")
         .attr("strock", "red")
-        .attr("style", `outline: ${BOARD_WIDTH}px solid grey;`) ;
-    var width = svg.attr("width")
-    var height = svg.attr("height")
+        .attr("style", `outline: ${BOARD_WIDTH}px solid grey;`);
     var g = svg.append("g")
         .attr("transform","translate("+marge.top+","+marge.left+")");
         
@@ -117,7 +120,7 @@ function draw(nodes, edges) {
             .on("end",ended)
         );
 
-    // 绘制节点
+    // 绘制节点, 设置点击事件
     gs.append("circle")
         .attr("r", NODE_SIZE)
         .attr("fill",function(d, i) {
@@ -128,7 +131,29 @@ function draw(nodes, edges) {
         })
         .attr("stroke-width", 3)
         .on("click", function(d, i) {
-            console.log(d);
+            var fileInfoKey = ['name', 'aTime', 'cTime', 'mTime', 'path', 'size', 'keywords']
+            var fileInfo = []
+            for (var key of fileInfoKey) {
+                fileInfo.push({key: key, val: d[key]})
+            }
+            console.log(fileInfo)
+            if(d['label'] == 'File') {
+                update = d3.select("#fileInfo")
+                    .selectAll("p")
+                    .data(fileInfo)
+                console.log(update)
+                enter = update.enter()
+                enter = enter.append("p")
+                update.text(function(d, i) {
+                    console.log(d);
+                    return `${d['key']}: ${d['val']}`;
+                })
+                enter.text(function(d, i) {
+                    console.log(d);
+                    return `${d['key']}: ${d['val']}`;
+                })
+                console.log(d);
+            }
         });
 
     // 文字
