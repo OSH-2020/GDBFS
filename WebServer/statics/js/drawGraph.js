@@ -17,11 +17,21 @@ function draw(nodes, edges) {
     forceSimulation = d3.forceSimulation()
         .force("link", d3.forceLink())
         .force("charge", d3.forceManyBody())
-        .force("charge", d3.forceManyBody().strength(-100))
-        .force("center", d3.forceCenter());
+        .force("charge", d3.forceManyBody().strength(-60))
+        .force("center", d3.forceCenter())
+        .force('collide',d3.forceCollide().radius(60).iterations(2));
     // 构建SVG作图区域
     var marge = {top: 60,bottom: 60,left: 60,right: 60}
     var svg = d3.select("svg")
+
+    // 设置可移动缩放
+    svg.call(d3.zoom()
+        .scaleExtent([0.1, 10])
+        .on("zoom", zoomed));
+
+    function zoomed() {
+      g.attr("transform", d3.event.transform);
+    }
     var width = svg.attr("width")
     var height = svg.attr("height")
     svg.append("g")
