@@ -6,6 +6,7 @@ import json
 from py2neo import *
 from . import neobase
 from . import UsrInputConv
+import os
 
 
 # Create your views here. 
@@ -64,9 +65,10 @@ def find_files(request):
     edges = []
     node_count = 0
     for file_node in result:
-        file_node_dict = {'name': file_node.node['name'], 'label': 'File'}
-        file_node_dict.update(file_node.node)
-        nodes.append(file_node_dict)
+        file_node_as_dict = {'name': file_node.node['name'], 'label': 'File'}
+        file_node_as_dict.update(file_node.node)
+        file_node_as_dict['keywords'] = list(file_node.keywords)
+        nodes.append(file_node_as_dict)
         node_indexes[file_node.node['path']] = node_count
         node_count += 1
         for keyword in file_node.keywords:
@@ -81,3 +83,9 @@ def find_files(request):
 
     name_dict = {"nodes": nodes, "edges": edges}
     return JsonResponse(name_dict)
+
+
+def open_file(request):
+    path = request.POST.get('path')
+    os.system("nohup xdg-open {}".format(path))
+    return JsonResponse({})

@@ -13,7 +13,7 @@
 </head>
 <body>
 
-<table border="1" width=100% height=150px id="opTable">
+<table border="1" width=100% id="opTable">
   <!-- 查找操作表 -->
   <tr><td width="28%">
     <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
@@ -48,7 +48,7 @@
 
     <!-- 文件列表表格 -->
     <td width="36%">
-    <table style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" height="100%" border=0>
+    <table style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" border=0>
       <tr>
         <td>
           <table cellSpacing=1 cellPadding=0 width="100%" align=center summary="" border=0>
@@ -101,44 +101,92 @@
   </tr>
 </table>
 
-<table border="1" width="100%" height="640">
+<table border="1" width="100%">
   <tr>
     <td width="960" height="640">
       <svg width="960" height="640"></svg>
     </td>
     <td width="window.screen.availWidth - 960">
-      <table border="1" height="100%" width="100%">
-        <tr height="70%">
-          <td colspan="3" id="fileInfo"></td>
-        </tr>
-        <tr height="30%">
-            <td><button width="50%" height="100%">打开</button></td>
-            <td><button width="50%" height="100%">删除</button></td>
+      <table border="1" width="100%" style="height: 100%;">
+        <tr style="height: 90%;"><td colspan="2">
+          <table border="1" style="height: 100%; width: 100%;">
+            <tr>
+              <td style="width: 10%;">name</td>
+              <td style="width: 90%;" id="nameInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">keywords</td>
+              <td style="width: 90%;" id="keywordsInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">cTime</td>
+              <td style="width: 90%;" id="cTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">mTime</td>
+              <td style="width: 90%;" id="mTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">aTime</td>
+              <td style="width: 90%;" id="aTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">size</td>
+              <td style="width: 90%;" id="sizeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">path</td>
+              <td style="width: 90%;" id="pathInfo"></td>
+            </tr>
+          </table>
+        </td></tr>
+        <tr style="height: 10%;">
+            <td><button id="openButton" onclick="return false;">打开</button></td>
+            <td><button id="deleteButton" onclick="return false;">删除</button></td>
         </tr>
       </table>
     </td>
   </tr>
 </table>
 
+<!-- 查找文件 -->
 <script>
-    $("#findButton").click(function () {
-        d3.select("svg")
-            .selectAll("*")
-            .remove();
-        $.ajax({
-            url: '/find_files',
-            type: 'post',
-            data: {
-                description: $("#description").val(),
-                ctime: $("#ctime").val(),
-                mtime: $("#mtime").val(),
-                atime: $("#atime").val(),
-            },
-            success: function (data) {
-                draw(data['nodes'], data['edges']);
-            },
-        })
+$("#findButton").click(function () {
+    d3.select("svg")
+        .selectAll("*")
+        .remove();
+    $.ajax({
+        url: '/find_files',
+        type: 'post',
+        data: {
+            description: $("#description").val(),
+            ctime: $("#ctime").val(),
+            mtime: $("#mtime").val(),
+            atime: $("#atime").val(),
+        },
+        success: function (data) {
+            draw(data['nodes'], data['edges']);
+        },
     })
+})
+</script>
+
+<!-- 打开文件 -->
+<script>
+$("#openButton").click(function () {
+  path = d3.select("#pathInfo").text()
+  console.log(path);
+  
+  $.ajax({
+      url: '/open_file',
+      type: 'post',
+      data: {
+        path: path,
+      },
+      success: function (data) {
+      },
+  })
+})
 </script>
 
 

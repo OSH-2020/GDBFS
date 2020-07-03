@@ -132,27 +132,8 @@ function draw(nodes, edges) {
         .attr("stroke-width", 3)
         .on("click", function(d, i) {
             var fileInfoKey = ['name', 'aTime', 'cTime', 'mTime', 'path', 'size', 'keywords']
-            var fileInfo = []
             for (var key of fileInfoKey) {
-                fileInfo.push({key: key, val: d[key]})
-            }
-            console.log(fileInfo)
-            if(d['label'] == 'File') {
-                update = d3.select("#fileInfo")
-                    .selectAll("p")
-                    .data(fileInfo)
-                console.log(update)
-                enter = update.enter()
-                enter = enter.append("p")
-                update.text(function(d, i) {
-                    console.log(d);
-                    return `${d['key']}: ${d['val']}`;
-                })
-                enter.text(function(d, i) {
-                    console.log(d);
-                    return `${d['key']}: ${d['val']}`;
-                })
-                console.log(d);
+                d3.select(`#${key}Info`).text(d[key])
             }
         });
 
