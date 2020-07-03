@@ -9,7 +9,7 @@ def add(file:str, option:list):
     file 是文件路径
     option 是参数
     """
-    cmd = "cp {file_path} /mnt".format(file_path = file)
+    cmd = "cp {file_path} mnt".format(file_path = file)
     option.insert(0,cmd)
     subprocess.call(option,shell=True)
 
@@ -19,7 +19,7 @@ def rm(file:str, option:list):
     file 是文件名
     option 是参数
     """
-    cmd = "rm /mnt/{file_name}".format(file_name= file)
+    cmd = "rm mnt/{file_name}".format(file_name= file)
     option.insert(0,cmd)
     subprocess.call(option,shell=True)
 
@@ -29,12 +29,16 @@ def open(file:str, option:list):
     file 是文件名
     option 是参数
     """
-    cmd = "nohup xdg-open /mnt/{file_name}".format(file_name= file)     # 有了nohup就不会莫名其妙中断了，但是会生成一个文件nohup.out
+    cmd = "nohup xdg-open mnt/{file_name}".format(file_name= file)     # 有了nohup就不会莫名其妙中断了，但是会生成一个文件nohup.out
     option.insert(0,cmd)
     option.append('&')
     subprocess.call(option,shell=True)
 
 def main():
+    if not os.path.exists('./mnt'):
+        os.system("mkdir -m 777 ./mnt")
+    if not os.path.exists('./GDBFS_root'):
+        os.makedirs("./GDBFS_root")
     while(True):
         str = input("# ")
         argv = str.split()
