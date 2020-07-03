@@ -57,9 +57,6 @@ def find_files(request):
     if len(result) == 0:
         return JsonResponse({"nodes": [], "edges": []})
 
-    print(result[0].node)
-    print(result[0].keywords)
-
     nodes = []
     node_indexes = {}
     edges = []
@@ -72,7 +69,7 @@ def find_files(request):
         node_indexes[file_node.node['path']] = node_count
         node_count += 1
         for keyword in file_node.keywords:
-            if keyword not in nodes:
+            if {'name': keyword, 'label': 'Keyword'} not in nodes:
                 nodes.append({'name': keyword, 'label': 'Keyword'})
                 node_indexes[keyword] = node_count
                 node_count += 1
@@ -82,6 +79,9 @@ def find_files(request):
                           'value': 1})
 
     name_dict = {"nodes": nodes, "edges": edges}
+    from pprint import pprint
+    pprint(nodes)
+    pprint(edges)
     return JsonResponse(name_dict)
 
 
@@ -89,3 +89,10 @@ def open_file(request):
     path = request.POST.get('path')
     os.system("nohup xdg-open {}".format(path))
     return JsonResponse({})
+
+
+def rm_file(request):
+    path = request.POST.get('path')
+    os.system("nohup xdg-open {}".format(path))
+    return JsonResponse({})
+

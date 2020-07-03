@@ -17,7 +17,7 @@ function draw(nodes, edges) {
     forceSimulation = d3.forceSimulation()
         .force("link", d3.forceLink())
         .force("charge", d3.forceManyBody())
-        .force("charge", d3.forceManyBody().strength(-700))
+        .force("charge", d3.forceManyBody().strength(-100))
         .force("center", d3.forceCenter());
     // 构建SVG作图区域
     var marge = {top: 60,bottom: 60,left: 60,right: 60}

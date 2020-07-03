@@ -1,7 +1,7 @@
 import py2neo
 from py2neo import *
 from py2neo.ogm import *
-from .api_extension import api_top
+from api_extension import api_top
 from typing import *
 import os
 from pprint import pprint
@@ -174,16 +174,17 @@ def get_files(graph: Graph, keywords=None, file_properties=None) -> List[FileNod
     cTime_constraint = [time_cypher_repr(span) for span in file_properties['cTime']] \
         if 'cTime' in file_properties else []
     cTime_constraint_cypher = ('({})'.format(' OR '.join(cTime_constraint))) \
-        if cTime_constraint != [] else ''
+        if cTime_constraint != [] else 'TRUE'
     aTime_constraint = [time_cypher_repr(span) for span in file_properties['aTime']] \
         if 'aTime' in file_properties else []
     aTime_constraint_cypher = ('({})'.format(' OR '.join(aTime_constraint))) \
-        if aTime_constraint != [] else ''
+        if aTime_constraint != [] else 'TRUE'
     mTime_constraint = [time_cypher_repr(span) for span in file_properties['mTime']] \
         if 'mTime' in file_properties else []
     mTime_constraint_cypher = ('({})'.format(' OR '.join(mTime_constraint))) \
-        if mTime_constraint != [] else ''
-    constraint_cypher = 'AND'.join([cTime_constraint_cypher, aTime_constraint_cypher, mTime_constraint_cypher])
+        if mTime_constraint != [] else 'TRUE'
+
+    constraint_cypher = ' AND '.join([cTime_constraint_cypher, aTime_constraint_cypher, mTime_constraint_cypher])
 
     # Deal with name constraint
     constraint_cypher += ('f.name = "{}"'.format(file_properties['name'])) \
