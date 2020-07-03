@@ -93,6 +93,6 @@ def open_file(request):
 
 def rm_file(request):
     path = request.POST.get('path')
-    os.system("nohup xdg-open {}".format(path))
+    os.system("rm {}".format(path))
     return JsonResponse({})
 

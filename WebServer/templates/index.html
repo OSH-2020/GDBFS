@@ -9,13 +9,27 @@
     $.ajaxSetup({
         data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
     });
+    $(function () {
+      $("body").height($(window).height());
+      $("body").width($(window).width());
+      $(window).resize(function () {
+        $("body").height($(window).height());
+        $("body").width($(window).width());
+      })
+    })
     </script>
+
+  <style type="text/css">
+    .mytable{table-layout: fixed; background-color: #ffffd9; BORDER-COLLAPSE: collapse;}
+    .mytd{word-break: break-all; word-wrap: break-word;}
+    html, body {height: 100%; width: 100%;}
+  </style>
 </head>
 <body>
 
 <table border="1" width=100% id="opTable">
   <!-- 查找操作表 -->
-  <tr><td width="28%">
+  <tr><td width="30%">
     <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
     
     <form id="inputForm" target="submitFrame"><fieldset>
@@ -47,56 +61,55 @@
     </fieldset></form></td>
 
     <!-- 文件列表表格 -->
-    <td width="36%">
+    <td width="70%">
     <table style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" border=0>
       <tr>
         <td>
-          <table cellSpacing=1 cellPadding=0 width="100%" align=center summary="" border=0>
-              <TR>
-                <TD align=middle bgColor=#000080 colSpan=5><FONT color=#ffffff size=2>文件列表</FONT></TD>
-              </TR>
-              <TR>
-                <TD width="24%" bgColor=#6c95d0><FONT size=2>文件名</FONT></TD>
-                <TD width="24%" bgColor=#6c95d0><FONT size=2>ctime</FONT></TD>
-                <TD width="24%" bgColor=#6c95d0><FONT size=2>atime</FONT></TD>
-                <TD width="24%" bgColor=#6c95d0><FONT size=2>mtime</FONT></TD>
-                <TD width="4%"  bgColor=#6c95d0><FONT size=2>　</FONT></TD>
-              </TR>
+          <table cellSpacing=1 cellPadding=0 width="100%" style="align-self: center; border: 1px;">
+              <tr>
+                <td align=middle bgColor=#000080 colSpan=8><FONT color=#ffffff size=2>文件列表</FONT></td>
+              </tr>
+              <tr>
+                <td width="10%" bgColor=#6c95d0><FONT size=2>name</FONT></td>
+                <td width="30%" bgColor=#6c95d0><FONT size=2>keywords</FONT></td>
+                <td width="11%" bgColor=#6c95d0><FONT size=2>atime</FONT></td>
+                <td width="11%" bgColor=#6c95d0><FONT size=2>ctime</FONT></td>
+                <td width="11%" bgColor=#6c95d0><FONT size=2>mtime</FONT></td>
+                <td width="5%" bgColor=#6c95d0><FONT size=2>size</FONT></td>
+                <td width="21%" bgColor=#6c95d0><FONT size=2>path</FONT></td>
+                <td width="1%" bgColor=#6c95d0></td>
+              </tr>
             </TABLE>
-        </TD>
-      </TR>
-      <TR>
-        <TD>
+        </td>
+      </tr>
+      <tr>
+        <td>
             <DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 150px">
-              <TABLE style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=12 width="99%" id="fileTable">
-                <TR>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>aaaa</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
-                </TR>
-                <TR>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>bbbb</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
-                </TR>
-                <TR>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>cccc</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
-                </TR>
-                <TR>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>dddd</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>2321</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>4521</FONT></TD>
-                  <TD width="25%" bgColor=#ffffd9 height=17><FONT size=2>1203</FONT></TD>
-                </TR>
+              <TABLE style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" id="fileTable" class="mytable">
+                <tr>
+                  <td bgColor=#ffffd9 style="width: 10%; border:1px solid black;"><FONT size=2>name</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 30%; border:1px solid black;"><FONT size=2>keywords</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>atime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>ctime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>mtime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 5%; border:1px solid black;"><FONT size=2>size</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 21%; border:1px solid black;"><FONT size=2>path</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 1%; border:1px solid black;"></td>
+                </tr>
+                <tr>
+                  <td bgColor=#ffffd9 style="width: 10%; border:1px solid black;"><FONT size=2>name</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 30%; border:1px solid black;"><FONT size=2>keywords</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>atime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>ctime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>mtime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 5%; border:1px solid black;"><FONT size=2>size</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 21%; border:1px solid black;"><FONT size=2>path</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 1%; border:1px solid black;"></td>
+                </tr>
               </TABLE>
             </DIV>
-        </TD>
-      </TR>
+        </td>
+      </tr>
     </TABLE></td>
   </tr>
 </table>
@@ -153,19 +166,20 @@
 <script>
 $("#findButton").click(function () {
     d3.select("svg")
-        .selectAll("*")
-        .remove();
+      .selectAll("*")
+      .remove();
     $.ajax({
         url: '/find_files',
         type: 'post',
         data: {
-            description: $("#description").val(),
-            ctime: $("#ctime").val(),
-            mtime: $("#mtime").val(),
-            atime: $("#atime").val(),
+          description: $("#description").val(),
+          ctime: $("#ctime").val(),
+          mtime: $("#mtime").val(),
+          atime: $("#atime").val(),
         },
         success: function (data) {
-            draw(data['nodes'], data['edges']);
+          listFileNodes(data['nodes']);
+          draw(data['nodes'], data['edges']);
         },
     })
 })

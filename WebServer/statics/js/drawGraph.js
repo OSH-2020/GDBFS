@@ -8,6 +8,11 @@ var BOARD_WIDTH = 5;
 var GRAPH_WIDTH = 960;
 var GRAPH_HEIGHT = 640;
 
+var fileInfoKey = ['name', 'keywords', 'aTime', 'cTime', 'mTime', 'size', 'path']
+var fileInfoKeyScale = {'name': "10%", 'keywords': "30%",
+    'aTime': "11%", 'cTime': "11%", 'mTime': "11%",
+    'size': "5%", 'path': "21%"}
+
 // 声明一个力导向图
 var forceSimulation;
 
@@ -17,9 +22,9 @@ function draw(nodes, edges) {
     forceSimulation = d3.forceSimulation()
         .force("link", d3.forceLink())
         .force("charge", d3.forceManyBody())
-        .force("charge", d3.forceManyBody().strength(-60))
+        .force("charge", d3.forceManyBody().strength(-50))
         .force("center", d3.forceCenter())
-        .force('collide',d3.forceCollide().radius(60).iterations(2));
+        .force('collide',d3.forceCollide().radius(60).iterations(5));
     // 构建SVG作图区域
     var marge = {top: 60,bottom: 60,left: 60,right: 60}
     var svg = d3.select("svg")
@@ -62,7 +67,7 @@ function draw(nodes, edges) {
     forceSimulation.force("link")
         .links(edges)
         .distance(function(d){//每一边的长度
-            return d.value*5*NODE_SIZE;
+            return d.value*3*NODE_SIZE;
         })
     // 设置图形的中心位置
     forceSimulation.force("center")
@@ -104,14 +109,14 @@ function draw(nodes, edges) {
         })
         .attr("stroke-width",2)
         .attr("marker-end","url(#arrow)"); // 按前面定义的箭头id画箭头
-    var linksText = g.append("g")
+    /*var linksText = g.append("g")
         .selectAll("text")
         .data(edges)
         .enter()
         .append("text")
         .text(function(d){
             return d.relation;
-        })
+        })*/
 
     // 绘制节点
     // 先为节点和节点上的文字分组
@@ -141,7 +146,6 @@ function draw(nodes, edges) {
         })
         .attr("stroke-width", 3)
         .on("click", function(d, i) {
-            var fileInfoKey = ['name', 'aTime', 'cTime', 'mTime', 'path', 'size', 'keywords']
             for (var key of fileInfoKey) {
                 d3.select(`#${key}Info`).text(d[key])
             }
@@ -165,13 +169,13 @@ function draw(nodes, edges) {
             .attr("y2",function(d){return d.target.y;})
             .attr("marker-end","url(#arrow)");
 
-        linksText
+        /*linksText
             .attr("x",function(d){
             return (d.source.x+d.target.x)/2;
         })
         .attr("y",function(d){
             return (d.source.y+d.target.y)/2;
-        });
+        });*/
 
         gs
             .attr('fill-opacity', 1)
@@ -200,5 +204,41 @@ function draw(nodes, edges) {
         // 表示最后不固定结点, 和neo4j browser的处理方式相反. 若要用neo4j的处理方式, 去掉这个即可
         d.fx = null;
         d.fy = null;
+    }
+}
+
+function listFileNodes(nodes) {
+    fileNodes = []
+    for(let item of nodes) {
+        if(item['label'] == 'File') {
+            fileNode = {}
+            for(let key of fileInfoKey) {
+                fileNode[key] = item[key]
+            }
+            fileNodes.push(fileNode)
+        }
+    }
+    $("#fileTable").children("*").remove();
+    fileTable = $("#fileTable")
+    console.log(fileTable)
+    for(var i = 0; i < fileNodes.length; i++) {
+        tr = $("<tr>")
+        for(var key of fileInfoKey) {
+            var td = $("<td></td>")
+                .addClass("mytd")
+                .text(fileNodes[i][key])
+                .width(fileInfoKeyScale[key])
+                .css("font-size", "12px")
+                .css("background-color", "#ffffd9")
+                .css("border", "1px solid black")
+            tr.append(td)
+        }
+        tr.append($("<td></td>")
+            .addClass("mytd")
+            .width("1%")
+            .css("font-size", "16px")
+            .css("background-color", "#ffffd9")
+            .css("border", "1px solid white"))
+        fileTable.append(tr)
     }
 }
