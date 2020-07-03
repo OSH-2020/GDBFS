@@ -1,17 +1,23 @@
-// forcesimulation chart Part
-// 新建一个力导向图
+/* 力导向图的绘制 */
+
+// 一些常量
 var NODE_SIZE = 30
 var ARROW_SIZE = 7;
 var BOARD_WIDTH = 5;
+
+// 声明一个力导向图
 var forceSimulation;
 
+// 绘制函数
 function draw(nodes, edges) {
+    // 新建一个力导向图
     forceSimulation = d3.forceSimulation()
-        .force("link",d3.forceLink())
+        .force("link", d3.forceLink())
         .force("charge", d3.forceManyBody())
         .force("charge", d3.forceManyBody().strength(-700))
-        .force("center",d3.forceCenter());
-    var marge = {top:60,bottom:60,left:60,right:60}
+        .force("center", d3.forceCenter());
+    // 构建SVG作图区域
+    var marge = {top: 60,bottom: 60,left: 60,right: 60}
     var svg = d3.select("svg")
     svg.append("g")
         .append("rect")
@@ -26,16 +32,13 @@ function draw(nodes, edges) {
     var height = svg.attr("height")
     var g = svg.append("g")
         .attr("transform","translate("+marge.top+","+marge.left+")");
-    // 设置一个color的颜色比例尺，为了让不同的nodes呈现不同的颜色
-    /*var fillColorScale = d3.scaleOrdinal()
-        .domain(d3.range(nodes.length))
-        .range(d3.schemeCategory10);*/
+        
+    // 结点和边框的颜色映射关系
     var fillColorScale = d3.scaleOrdinal()
-        .domain(d3.range(2))
+        .domain(['Keyword', 'File'])
         .range(['LightSkyBlue', 'hotpink']);
-
     var strokeColorScale = d3.scaleOrdinal()
-        .domain(d3.range(2))
+        .domain(['Keyword', 'File'])
         .range(['RoyalBlue  ', 'Crimson']);
 
     // 初始化力导向图，也就是传入数据
@@ -57,11 +60,11 @@ function draw(nodes, edges) {
     console.log(edges);
 
     // 有了节点和边的数据后，我们开始绘制
-    // marker's configuration
     var svg = d3.select("body").append("svg")
 	    .attr("width", width)
 	    .attr("height", height);
 
+    // 箭头
     svg.append("svg:defs").selectAll("marker")
         .data(["end"])      // Different link/path types can be defined here
         .enter().append("svg:marker")    // This section adds in the arrows
@@ -87,7 +90,7 @@ function draw(nodes, edges) {
             return 'grey';
         })
         .attr("stroke-width",2)
-        .attr("marker-end","url(#arrow)");
+        .attr("marker-end","url(#arrow)"); // 按前面定义的箭头id画箭头
     var linksText = g.append("g")
         .selectAll("text")
         .data(edges)
@@ -123,7 +126,11 @@ function draw(nodes, edges) {
         .attr("stroke", function(d, i) {
             return strokeColorScale(d['label']);
         })
-        .attr("stroke-width", 3);
+        .attr("stroke-width", 3)
+        .on("click", function(d, i) {
+            console.log(d);
+        });
+
     // 文字
     // 以圆心为文本框左下角
     gs.append("text")

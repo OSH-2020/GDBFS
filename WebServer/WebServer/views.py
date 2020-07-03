@@ -27,13 +27,10 @@ def ajax_list(request):
 
 
 def find_files(request):
-    print(request.POST.get("description").__class__)
     description = request.POST.get("description")
     ctime = request.POST.get("ctime")
     atime = request.POST.get("atime")
     mtime = request.POST.get("mtime")
-    print("description", description)
-    print("acmtime", atime, ctime, mtime)
     # Get usr's input -- Gao
     l_grammared = UsrInputConv.add_grammar(
         UsrInputConv.pos_tag(
@@ -47,9 +44,7 @@ def find_files(request):
     mtime_period = UsrInputConv.time_top(mtime)
     search_key = UsrInputConv.KeyWord(l_filtered, atime_period, ctime_period, mtime_period)
     print('keywords: ', search_key.keywords)
-    print('atime:    ', search_key.atime)
-    print('ctime:    ', search_key.ctime)
-    print('mtime:    ', search_key.ctime)
+    print("acmtime", search_key.atime, search_key.ctime, search_key.mtime, sep=', ')
 
     # Get files according to keywords and file_properties -- Wang
     graph = Graph("bolt://localhost:7687")
@@ -69,7 +64,9 @@ def find_files(request):
     edges = []
     node_count = 0
     for file_node in result:
-        nodes.append({'name': file_node.node['name'], 'label': 'File'})
+        file_node_dict = {'name': file_node.node['name'], 'label': 'File'}
+        file_node_dict.update(file_node.node)
+        nodes.append(file_node_dict)
         node_indexes[file_node.node['path']] = node_count
         node_count += 1
         for keyword in file_node.keywords:
