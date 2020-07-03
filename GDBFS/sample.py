@@ -20,12 +20,12 @@ def test_create_file_node():
     pprint(neo4j_txt.relationships)
     print('id: ', str(neo4j_txt.node.identity))
     # Invoking the picture extractor takes lots of time. So comment it out.
-    '''
+
     cat_jpeg = neobase.FileNode(r'sample_files/cat.jpg')
     cat_jpeg.update_info()
     cat_jpeg.push_into(graph)
     pprint(cat_jpeg)
-    '''
+
 
 
 def test_get_files():
@@ -74,7 +74,7 @@ def test_rename_file():
 
 if __name__ == "__main__":
     test_create_file_node()
-    test_get_files()
+    # test_get_files()
     # test_delete_file()
     # test_rename_file()
     pass

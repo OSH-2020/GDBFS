@@ -1,41 +1,62 @@
-// forcesimulation chart Part
-// 新建一个力导向图
+/* 力导向图的绘制 */
+
+// 一些常量
 var NODE_SIZE = 30
 var ARROW_SIZE = 7;
 var BOARD_WIDTH = 5;
+
+var GRAPH_WIDTH = 960;
+var GRAPH_HEIGHT = 640;
+
+var fileInfoKey = ['name', 'keywords', 'aTime', 'cTime', 'mTime', 'size', 'path']
+var fileInfoKeyScale = {'name': "10%", 'keywords': "30%",
+    'aTime': "11%", 'cTime': "11%", 'mTime': "11%",
+    'size': "5%", 'path': "21%"}
+
+// 声明一个力导向图
 var forceSimulation;
 
+// 绘制函数
 function draw(nodes, edges) {
+    // 新建一个力导向图
     forceSimulation = d3.forceSimulation()
-        .force("link",d3.forceLink())
+        .force("link", d3.forceLink())
         .force("charge", d3.forceManyBody())
-        .force("charge", d3.forceManyBody().strength(-700))
-        .force("center",d3.forceCenter());
-    var marge = {top:60,bottom:60,left:60,right:60}
+        .force("charge", d3.forceManyBody().strength(-50))
+        .force("center", d3.forceCenter())
+        .force('collide',d3.forceCollide().radius(60).iterations(5));
+    // 构建SVG作图区域
+    var marge = {top: 60,bottom: 60,left: 60,right: 60}
     var svg = d3.select("svg")
+
+    // 设置可移动缩放
+    svg.call(d3.zoom()
+        .scaleExtent([0.1, 10])
+        .on("zoom", zoomed));
+
+    function zoomed() {
+      g.attr("transform", d3.event.transform);
+    }
+    var width = svg.attr("width")
+    var height = svg.attr("height")
     svg.append("g")
         .append("rect")
         .attr("x", BOARD_WIDTH)
         .attr("y", BOARD_WIDTH)
-        .attr("width", 960-BOARD_WIDTH*2)
-        .attr("height", 600-BOARD_WIDTH*2)
+        .attr("width", width-BOARD_WIDTH*2)
+        .attr("height", height-BOARD_WIDTH*2)
         .attr("fill", "white")
         .attr("strock", "red")
-        .attr("style", `outline: ${BOARD_WIDTH}px solid grey;`) ;
-    var width = svg.attr("width")
-    var height = svg.attr("height")
+        .attr("style", `outline: ${BOARD_WIDTH}px solid grey;`);
     var g = svg.append("g")
         .attr("transform","translate("+marge.top+","+marge.left+")");
-    // 设置一个color的颜色比例尺，为了让不同的nodes呈现不同的颜色
-    /*var fillColorScale = d3.scaleOrdinal()
-        .domain(d3.range(nodes.length))
-        .range(d3.schemeCategory10);*/
+        
+    // 结点和边框的颜色映射关系
     var fillColorScale = d3.scaleOrdinal()
-        .domain(d3.range(2))
+        .domain(['Keyword', 'File'])
         .range(['LightSkyBlue', 'hotpink']);
-
     var strokeColorScale = d3.scaleOrdinal()
-        .domain(d3.range(2))
+        .domain(['Keyword', 'File'])
         .range(['RoyalBlue  ', 'Crimson']);
 
     // 初始化力导向图，也就是传入数据
@@ -46,7 +67,7 @@ function draw(nodes, edges) {
     forceSimulation.force("link")
         .links(edges)
         .distance(function(d){//每一边的长度
-            return d.value*5*NODE_SIZE;
+            return d.value*3*NODE_SIZE;
         })
     // 设置图形的中心位置
     forceSimulation.force("center")
@@ -57,11 +78,11 @@ function draw(nodes, edges) {
     console.log(edges);
 
     // 有了节点和边的数据后，我们开始绘制
-    // marker's configuration
     var svg = d3.select("body").append("svg")
 	    .attr("width", width)
 	    .attr("height", height);
 
+    // 箭头
     svg.append("svg:defs").selectAll("marker")
         .data(["end"])      // Different link/path types can be defined here
         .enter().append("svg:marker")    // This section adds in the arrows
@@ -87,15 +108,15 @@ function draw(nodes, edges) {
             return 'grey';
         })
         .attr("stroke-width",2)
-        .attr("marker-end","url(#arrow)");
-    var linksText = g.append("g")
+        .attr("marker-end","url(#arrow)"); // 按前面定义的箭头id画箭头
+    /*var linksText = g.append("g")
         .selectAll("text")
         .data(edges)
         .enter()
         .append("text")
         .text(function(d){
             return d.relation;
-        })
+        })*/
 
     // 绘制节点
     // 先为节点和节点上的文字分组
@@ -114,7 +135,7 @@ function draw(nodes, edges) {
             .on("end",ended)
         );
 
-    // 绘制节点
+    // 绘制节点, 设置点击事件
     gs.append("circle")
         .attr("r", NODE_SIZE)
         .attr("fill",function(d, i) {
@@ -123,7 +144,13 @@ function draw(nodes, edges) {
         .attr("stroke", function(d, i) {
             return strokeColorScale(d['label']);
         })
-        .attr("stroke-width", 3);
+        .attr("stroke-width", 3)
+        .on("click", function(d, i) {
+            for (var key of fileInfoKey) {
+                d3.select(`#${key}Info`).text(d[key])
+            }
+        });
+
     // 文字
     // 以圆心为文本框左下角
     gs.append("text")
@@ -142,13 +169,13 @@ function draw(nodes, edges) {
             .attr("y2",function(d){return d.target.y;})
             .attr("marker-end","url(#arrow)");
 
-        linksText
+        /*linksText
             .attr("x",function(d){
             return (d.source.x+d.target.x)/2;
         })
         .attr("y",function(d){
             return (d.source.y+d.target.y)/2;
-        });
+        });*/
 
         gs
             .attr('fill-opacity', 1)
@@ -177,5 +204,41 @@ function draw(nodes, edges) {
         // 表示最后不固定结点, 和neo4j browser的处理方式相反. 若要用neo4j的处理方式, 去掉这个即可
         d.fx = null;
         d.fy = null;
+    }
+}
+
+function listFileNodes(nodes) {
+    fileNodes = []
+    for(let item of nodes) {
+        if(item['label'] == 'File') {
+            fileNode = {}
+            for(let key of fileInfoKey) {
+                fileNode[key] = item[key]
+            }
+            fileNodes.push(fileNode)
+        }
+    }
+    $("#fileTable").children("*").remove();
+    fileTable = $("#fileTable")
+    console.log(fileTable)
+    for(var i = 0; i < fileNodes.length; i++) {
+        tr = $("<tr>")
+        for(var key of fileInfoKey) {
+            var td = $("<td></td>")
+                .addClass("mytd")
+                .text(fileNodes[i][key])
+                .width(fileInfoKeyScale[key])
+                .css("font-size", "12px")
+                .css("background-color", "#ffffd9")
+                .css("border", "1px solid black")
+            tr.append(td)
+        }
+        tr.append($("<td></td>")
+            .addClass("mytd")
+            .width("1%")
+            .css("font-size", "16px")
+            .css("background-color", "#ffffd9")
+            .css("border", "1px solid white"))
+        fileTable.append(tr)
     }
 }

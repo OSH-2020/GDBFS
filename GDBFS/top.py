@@ -19,11 +19,11 @@ def main(yourkey, atime, ctime, mtime):
     neo4j_txt.update_info(other_keywords={'neo4j'})
     neo4j_txt.merge_into(graph)
     # Note that this picture processing costs much time.
-    '''
+
     cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
     cat_jpeg.update_info()
     cat_jpeg.merge_into(graph)
-    '''
+
     
     # Get usr's input -- Gao
     l_grammared = add_grammar(pos_tag(tree_flatting(ne_chunk(pos_tag(word_tokenize(yourkey))))))
