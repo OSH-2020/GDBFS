@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GDBFS</title>
+    <script src="/statics/js/jquery-3.5.1.js"></script>
+    <script src="/statics/js/d3.js"></script>
+    <script src="/statics/js/drawGraph.js"></script>
+    <script>
+    $.ajaxSetup({
+        data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
+    });
+    $(function () {
+      $("body").height($(window).height());
+      $("body").width($(window).width());
+      $(window).resize(function () {
+        $("body").height($(window).height());
+        $("body").width($(window).width());
+      })
+    })
+    </script>
+
+  <style type="text/css">
+    .mytable{table-layout: fixed; background-color: #ffffd9; BORDER-COLLAPSE: collapse;}
+    .mytd{word-break: break-all; word-wrap: break-word;}
+    html, body {height: 100%; width: 100%;}
+  </style>
+</head>
+<body>
+
+<table border="1" width=100% id="opTable">
+  <!-- 查找操作表 -->
+  <tr><td width="30%">
+    <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
+    
+    <form id="inputForm" target="submitFrame"><fieldset>
+        {% csrf_token %}
+        <legend>查找文件</legend>
+        <table>
+            <tr>
+                <td>需操作的文件的描述</td>
+                <td><input type="text" name="description" id="description"/></td>
+            </tr>
+            <tr>
+                <td>ctime</td>
+                <td><input type="text" name="ctime" id="ctime"/></td>
+            </tr>
+            <tr>
+                <td>atime</td>
+                <td><input type="text" name="atime" id="atime"/></td>
+            </tr>
+            <tr>
+                <td>mtime</td>
+                <td><input type="text" name="mtime" id="mtime"/></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button id="findButton" onclick="return false;">find</button>
+                </td>
+            </tr>
+        </table>
+    </fieldset></form></td>
+
+    <!-- 文件列表表格 -->
+    <td width="70%">
+    <table style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" border=0>
+      <tr>
+        <td>
+          <table cellSpacing=1 cellPadding=0 width="100%" style="align-self: center; border: 1px;">
+              <tr>
+                <td bgColor=#000080 colSpan=8 style="font-size: 16; color: white; text-align: center;">文件列表</td>
+              </tr>
+              <tr>
+                <td width="10%" bgColor=#6c95d0 style="font-size: 16;">name</td>
+                <td width="30%" bgColor=#6c95d0 style="font-size: 16;">keywords</td>
+                <td width="11%" bgColor=#6c95d0 style="font-size: 16;">atime</td>
+                <td width="11%" bgColor=#6c95d0 style="font-size: 16;">ctime</td>
+                <td width="11%" bgColor=#6c95d0 style="font-size: 16;">mtime</td>
+                <td width="5%" bgColor=#6c95d0 style="font-size: 16;">size</td>
+                <td width="21%" bgColor=#6c95d0 style="font-size: 16;">path</td>
+                <td width="1%" bgColor=#6c95d0></td>
+              </tr>
+            </TABLE>
+        </td>
+      </tr>
+      <tr>
+        <td>
+            <DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 150px">
+              <TABLE style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" id="fileTable" class="mytable">
+                <tr>
+                  <td bgColor=#ffffd9 style="width: 10%; border:1px solid black;"><FONT size=2>name</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 30%; border:1px solid black;"><FONT size=2>keywords</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>atime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>ctime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>mtime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 5%; border:1px solid black;"><FONT size=2>size</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 21%; border:1px solid black;"><FONT size=2>path</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 1%; border:1px solid black;"></td>
+                </tr>
+                <tr>
+                  <td bgColor=#ffffd9 style="width: 10%; border:1px solid black;"><FONT size=2>name</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 30%; border:1px solid black;"><FONT size=2>keywords</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>atime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>ctime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>mtime</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 5%; border:1px solid black;"><FONT size=2>size</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 21%; border:1px solid black;"><FONT size=2>path</FONT></td>
+                  <td bgColor=#ffffd9 style="width: 1%; border:1px solid black;"></td>
+                </tr>
+              </TABLE>
+            </DIV>
+        </td>
+      </tr>
+    </TABLE></td>
+  </tr>
+</table>
+
+<table border="1" width="100%">
+  <tr>
+    <td width="960" height="640">
+      <svg width="960" height="640"></svg>
+    </td>
+    <td width="window.screen.availWidth - 960">
+      <table border="1" width="100%" style="height: 100%;">
+        <tr style="height: 90%;"><td colspan="2">
+          <table border="1" style="height: 100%; width: 100%;">
+            <tr>
+              <td style="width: 10%;">name</td>
+              <td style="width: 90%;" id="nameInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">keywords</td>
+              <td style="width: 90%;" id="keywordsInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">cTime</td>
+              <td style="width: 90%;" id="cTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">mTime</td>
+              <td style="width: 90%;" id="mTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">aTime</td>
+              <td style="width: 90%;" id="aTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">size</td>
+              <td style="width: 90%;" id="sizeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">path</td>
+              <td style="width: 90%;" id="pathInfo"></td>
+            </tr>
+          </table>
+        </td></tr>
+        <tr style="height: 10%;">
+            <td><button id="openButton" onclick="return false;">打开</button></td>
+            <td><button id="deleteButton" onclick="return false;">删除</button></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<!-- 查找文件 -->
+<script>
+$("#findButton").click(function () {
+    d3.select("svg")
+      .selectAll("*")
+      .remove();
+    $.ajax({
+        url: '/find_files',
+        type: 'post',
+        data: {
+          description: $("#description").val(),
+          ctime: $("#ctime").val(),
+          mtime: $("#mtime").val(),
+          atime: $("#atime").val(),
+        },
+        success: function (data) {
+          listFileNodes(data['nodes']);
+          draw(data['nodes'], data['edges']);
+        },
+    })
+})
+</script>
+
+<!-- 打开文件 -->
+<script>
+$("#openButton").click(function () {
+  path = d3.select("#pathInfo").text()
+  console.log(path);
+  
+  $.ajax({
+      url: '/open_file',
+      type: 'post',
+      data: {
+        path: path,
+      },
+      success: function (data) {
+      },
+  })
+})
+</script>
+
+
+</body>
+</html>
