@@ -1,30 +1,19 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import JsonResponse
 from django.shortcuts import render
-from django import forms
-from django.forms import fields, widgets
-import json
 from py2neo import *
 from . import neobase
 from . import UsrInputConv
 import os
+import tkinter as tk
+from tkinter import filedialog
 
 
-# Create your views here. 
-def index(request):
-    return render(request, 'index.html')
+def home(request):
+    return render(request, 'home.html')
 
 
-def add(request):
-    a = request.GET.get('a', 0)
-    b = request.GET.get('b', 0)
-    c = int(a) + int(b)
-    return HttpResponse(str(c))
-
-
-def ajax_list(request):
-    a = list(range(10))
-    # return HttpResponse(json.dump(a), content_type='application/json')
-    return JsonResponse(a, safe=False)
+def gdbfs(request):
+    return render(request, 'gdbfs.html')
 
 
 def find_files(request):
@@ -96,3 +85,10 @@ def rm_file(request):
     os.system("rm {}".format(path))
     return JsonResponse({})
 
+
+def choose_dir(request):
+    root = tk.Tk()
+    root.withdraw()
+    path = filedialog.askdirectory()
+    print(path)
+    return JsonResponse({'path': path})
