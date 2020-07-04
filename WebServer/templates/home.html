@@ -12,11 +12,19 @@
 </head>
 <body>
 
-{% csrf_token %}
 
-<button id="chooseDirButton">choose</button>
+<h1>Welcome to Use GDBFS</h1>
+<h4>Please choose your mount point!</h4>
+<form action="/gdbfs" method="POST">
+    {% csrf_token %}
+    <input type="text" id="pathText" name="path" style="width: 400px;"/>
+    <input type="button" value="browse" id="chooseDirButton"/>
+    <input type="submit" value="Enter!"/>
+</form>
+
 
 <script>
+// 响应 browse 按钮
 $("#chooseDirButton").click(function () {
     $.ajax({
         url: '/choose_dir',
@@ -25,6 +33,8 @@ $("#chooseDirButton").click(function () {
         },
         success: function (data) {
             console.log(data['path'])
+            console.log($("#pathText"))
+            $("#pathText").val(data['path'])
         },
     })
 })

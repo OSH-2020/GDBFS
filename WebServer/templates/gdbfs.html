@@ -27,6 +27,9 @@
 </head>
 <body>
 
+
+<button id="umount">卸载</button>
+
 <table border="1" width=100% id="opTable">
   <!-- 查找操作表 -->
   <tr><td width="30%">
@@ -198,6 +201,22 @@ $("#openButton").click(function () {
         path: path,
       },
       success: function (data) {
+      },
+  })
+})
+</script>
+
+<!-- 卸载文件系统 -->
+<script>
+$("#umount").click(function () {
+  console.log("开始卸载")
+  $.ajax({
+      url: '/umount',
+      type: 'post',
+      data: {
+      },
+      success: function (data) {
+        console.log("卸载!")
       },
   })
 })

@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
 import os
+from multiprocessing import Process
+from GDBFS import fusebase
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -122,3 +124,15 @@ STATIC_URL = '/statics/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "statics"),
 ]
+
+
+class FuseProcess(Process):
+    def __init__(self, mount_path=os.path.realpath(__file__) + '/../mnt'):
+        super().__init__()
+        self.mount_path = mount_path
+
+    def run(self):
+        fusebase.mount_gdbfs(self.mount_path)
+
+
+fuse_process = None

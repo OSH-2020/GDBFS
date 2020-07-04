@@ -1,10 +1,9 @@
 import py2neo
 from py2neo import *
 from py2neo.ogm import *
-from .api_extension import api_top
+from GDBFS.api_extension import api_top
 from typing import *
 import os
-from pprint import pprint
 import logging
 
 

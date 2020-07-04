@@ -1,11 +1,12 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from py2neo import *
-from . import neobase
+from GDBFS import neobase
 from . import UsrInputConv
 import os
 import tkinter as tk
 from tkinter import filedialog
+from . import settings
 
 
 def home(request):
@@ -13,6 +14,14 @@ def home(request):
 
 
 def gdbfs(request):
+    try:
+        if type(settings.fuse_process) == settings.FuseProcess:
+            settings.fuse_process.terminate()
+            os.system("umount {}".format(settings.fuse_process.mount_path))
+    except AttributeError:
+        pass
+    settings.fuse_process = settings.FuseProcess(request.POST.get('path'))
+    settings.fuse_process.start()
     return render(request, 'gdbfs.html')
 
 
@@ -90,5 +99,16 @@ def choose_dir(request):
     root = tk.Tk()
     root.withdraw()
     path = filedialog.askdirectory()
+    root.destroy()
     print(path)
     return JsonResponse({'path': path})
+
+
+def umount(request):
+    try:
+        if type(settings.fuse_process) == settings.FuseProcess:
+            settings.fuse_process.terminate()
+            os.system("umount {}".format(settings.fuse_process.mount_path))
+    except AttributeError:
+        pass
+    return JsonResponse({})

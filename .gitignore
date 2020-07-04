@@ -30,3 +30,4 @@ WebServer/.idea/*
 WebServer/WebServer/__pycache__
 WebServer/WebServer/__pycache__/*
 WebServer/nohup.out
+**/__pycache__

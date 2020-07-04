@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^find_files$', views.find_files, name='find_files'),
     url(r'^open_file$', views.open_file, name='open_file'),
     url(r'^choose_dir$', views.choose_dir, name='choose_dir'),
+    url(r'^umount$', views.umount, name='umount'),
 ]

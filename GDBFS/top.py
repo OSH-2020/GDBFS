@@ -17,12 +17,12 @@ def main(yourkey, atime, ctime, mtime):
     # Here is a sample for FileNode
     neo4j_txt = neobase.FileNode(r'sample_files/neo4j.txt')
     neo4j_txt.update_info(other_keywords={'neo4j'})
-    neo4j_txt.merge_into(graph)
+    neo4j_txt.update_info(graph)
     # Note that this picture processing costs much time.
 
     cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
     cat_jpeg.update_info()
-    cat_jpeg.merge_into(graph)
+    cat_jpeg.update_info(graph)
 
     
     # Get usr's input -- Gao
