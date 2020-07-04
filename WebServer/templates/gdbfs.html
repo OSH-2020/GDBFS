@@ -29,6 +29,7 @@
 
 
 <button id="umount">卸载</button>
+<button id="addFileButton">添加文件</button>
 
 <table border="1" width=100% id="opTable">
   <!-- 查找操作表 -->
@@ -188,6 +189,21 @@ $("#findButton").click(function () {
 })
 </script>
 
+<!-- 添加文件 -->
+<script>
+  $("#addFileButton").click(function () {
+    console.log('add')
+      $.ajax({
+          url: '/add_files',
+          type: 'post',
+          data: {
+          },
+          success: function (data) {
+          },
+      })
+  })
+  </script>
+
 <!-- 打开文件 -->
 <script>
 $("#openButton").click(function () {
@@ -201,6 +217,9 @@ $("#openButton").click(function () {
         path: path,
       },
       success: function (data) {
+        if(data['ok'] == false) {
+          alert("找不到该文件")
+        }
       },
   })
 })

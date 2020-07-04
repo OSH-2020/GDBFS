@@ -87,8 +87,11 @@ def open_file(request):
     path = neobase.convert_path(path,
                                 settings.fuse_process.fuse_obj.root,
                                 settings.fuse_process.fuse_obj.mount_point)
+    ok = True
+    if not os.access(path, os.F_OK):
+        ok = False
     os.system("nohup xdg-open {}".format(path))
-    return JsonResponse({})
+    return JsonResponse({'ok': ok})
 
 
 def rm_file(request):
@@ -107,6 +110,16 @@ def choose_dir(request):
     root.destroy()
     print(path)
     return JsonResponse({'path': path})
+
+
+def add_files(request):
+    root = tk.Tk()
+    root.withdraw()
+    paths = filedialog.askopenfilenames()
+    root.destroy()
+    for path in paths:
+        os.system('cp {} {}'.format(path, settings.fuse_process.fuse_obj.mount_point))
+    return JsonResponse({'path': paths})
 
 
 def umount(request):
