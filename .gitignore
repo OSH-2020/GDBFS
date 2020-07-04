@@ -1,6 +1,7 @@
 ﻿.vscode
 GDBFS/*
 sample/*
+!GDBFS/nltk_data
 !GDBFS/README.md
 !GDBFS/neobase.py
 !GDBFS/sample.py
