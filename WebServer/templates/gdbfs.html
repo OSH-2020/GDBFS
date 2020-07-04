@@ -100,26 +100,6 @@
         <td>
             <DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 150px">
               <TABLE style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" id="fileTable" class="mytable">
-                <tr>
-                  <td bgColor=#ffffd9 style="width: 10%; border:1px solid black;"><FONT size=2>name</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 30%; border:1px solid black;"><FONT size=2>keywords</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>atime</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>ctime</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>mtime</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 5%; border:1px solid black;"><FONT size=2>size</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 21%; border:1px solid black;"><FONT size=2>path</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 1%; border:1px solid black;"></td>
-                </tr>
-                <tr>
-                  <td bgColor=#ffffd9 style="width: 10%; border:1px solid black;"><FONT size=2>name</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 30%; border:1px solid black;"><FONT size=2>keywords</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>atime</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>ctime</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 11%; border:1px solid black;"><FONT size=2>mtime</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 5%; border:1px solid black;"><FONT size=2>size</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 21%; border:1px solid black;"><FONT size=2>path</FONT></td>
-                  <td bgColor=#ffffd9 style="width: 1%; border:1px solid black;"></td>
-                </tr>
               </TABLE>
             </DIV>
         </td>
@@ -202,13 +182,16 @@ $("#findButton").click(function () {
 <!-- 添加文件 -->
 <script>
   $("#addFileButton").click(function () {
-    console.log('add')
       $.ajax({
           url: '/add_files',
           type: 'post',
           data: {
           },
           success: function (data) {
+            paths = data['paths']
+            for(var path of paths) {
+              alert(`成功添加文件:\n${path}`)
+            }
           },
       })
   })

@@ -31,3 +31,5 @@ WebServer/WebServer/__pycache__
 WebServer/WebServer/__pycache__/*
 WebServer/nohup.out
 **/__pycache__
+WebServer/mnt/*
+WebServer/GDBFS_root/*

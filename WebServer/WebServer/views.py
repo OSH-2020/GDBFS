@@ -119,7 +119,7 @@ def add_files(request):
     root.destroy()
     for path in paths:
         os.system('cp {} {}'.format(path, settings.fuse_process.fuse_obj.mount_point))
-    return JsonResponse({'path': paths})
+    return JsonResponse({'paths': paths})
 
 
 def umount(request):
