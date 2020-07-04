@@ -21,7 +21,7 @@ def gdbfs(request):
         pass
     settings.fuse_process = settings.FuseProcess(request.POST.get('path'))
     settings.fuse_process.start()
-    return render(request, 'gdbfs.html')
+    return render(request, 'gdbfs.html', {'mount_path': settings.fuse_process.fuse_obj.mount_point})
 
 
 def find_files(request):
