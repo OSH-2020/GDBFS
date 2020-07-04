@@ -177,7 +177,7 @@ class GDBFSFuse(Operations):
 
 
 def mount_gdbfs(mount_point):
-    FUSE(GDBFSFuse('./GDBFS_root', mount_point), mount_point, foreground=True)
+    FUSE(GDBFSFuse(os.path.realpath(__file__) + '/../GDBFS_root', mount_point), mount_point, foreground=True)
 
 
 if __name__ == '__main__':
