@@ -1,8 +1,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 from py2neo import *
-from GDBFS import neobase
-from . import UsrInputConv
+from GDBFS import neobase, UsrInputConv
 import os
 import tkinter as tk
 from tkinter import filedialog
