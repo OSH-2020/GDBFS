@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="../statics/js/jquery-3.5.1.js"></script>
+    <script>
+        $.ajaxSetup({
+            data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
+        });
+    </script>
+</head>
+<body>
+
+{% csrf_token %}
+
+<button id="chooseDirButton">choose</button>
+
+<script>
+$("#chooseDirButton").click(function () {
+    $.ajax({
+        url: '/choose_dir',
+        type: 'post',
+        data: {
+        },
+        success: function (data) {
+            console.log(data['path'])
+        },
+    })
+})
+</script>
+
+</body>
+</html>
