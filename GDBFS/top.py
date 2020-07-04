@@ -17,14 +17,14 @@ def main(yourkey, atime, ctime, mtime):
     # Here is a sample for FileNode
     neo4j_txt = neobase.FileNode(r'sample_files/neo4j.txt')
     neo4j_txt.update_info(other_keywords={'neo4j'})
-    neo4j_txt.update_info(graph)
+    neo4j_txt.push_into(graph)
     # Note that this picture processing costs much time.
-
+    '''
     cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
     cat_jpeg.update_info()
-    cat_jpeg.update_info(graph)
+    cat_jpeg.push_into(graph)
+    '''
 
-    
     # Get usr's input -- Gao
     l_grammared = add_grammar(pos_tag(tree_flatting(ne_chunk(pos_tag(word_tokenize(yourkey))))))
     l_filtered = list_filter(pos_tag(l_grammared))
@@ -45,7 +45,7 @@ def main(yourkey, atime, ctime, mtime):
                                                   'aTime': search_key.atime,
                                                   'mTime': search_key.mtime})
     pprint("We've found this for you:")
-    pprint(neo4jtxt)
+    pprint(neo4jtxt[0].node)
 
 
 if __name__ == '__main__':
