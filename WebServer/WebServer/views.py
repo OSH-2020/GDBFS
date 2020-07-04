@@ -84,14 +84,20 @@ def find_files(request):
 
 def open_file(request):
     path = request.POST.get('path')
+    path = neobase.convert_path(path,
+                                settings.fuse_process.fuse_obj.root,
+                                settings.fuse_process.fuse_obj.mount_point)
     os.system("nohup xdg-open {}".format(path))
     return JsonResponse({})
 
 
 def rm_file(request):
     path = request.POST.get('path')
+    path = neobase.convert_path(path,
+                                settings.fuse_process.fuse_obj.root,
+                                settings.fuse_process.fuse_obj.mount_point)
     os.system("rm {}".format(path))
-    return JsonResponse({})
+    return JsonResponse({'path': path})
 
 
 def choose_dir(request):

@@ -5,7 +5,7 @@ from GDBFS.api_extension import api_top
 from typing import *
 import os
 import logging
-
+import re
 
 class FileNode:
     RELATES_TO = Relationship.type('RELATES_TO')
@@ -274,3 +274,9 @@ OPTIONAL MATCH (new)-[r: RELATES_TO]->(k:Keyword)
     file_node.update_properties({'path': new, 'name': os.path.split(new)[1]})
     file_node.update_relationships()
     file_node.push_into(graph)
+
+
+def convert_path(path: str, old_prefix: str, new_prefix: str) -> str:
+    return re.sub(r'{}'.format(os.path.realpath(old_prefix)),
+                  os.path.realpath(new_prefix),
+                  path, count=1)

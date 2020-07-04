@@ -206,6 +206,25 @@ $("#openButton").click(function () {
 })
 </script>
 
+<!-- 删除文件 -->
+<script>
+$("#deleteButton").click(function () {
+  path = d3.select("#pathInfo").text()
+  console.log(path);
+  
+  $.ajax({
+      url: '/rm_file',
+      type: 'post',
+      data: {
+        path: path,
+      },
+      success: function (data) {
+        alert(`${data['path']} is removed!`)
+      },
+  })
+})
+</script>
+
 <!-- 卸载文件系统 -->
 <script>
 $("#umount").click(function () {

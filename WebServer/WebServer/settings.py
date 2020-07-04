@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from multiprocessing import Process
 from GDBFS import fusebase
+from fuse import FUSE
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -130,9 +131,10 @@ class FuseProcess(Process):
     def __init__(self, mount_path=os.path.realpath(__file__) + '/../mnt'):
         super().__init__()
         self.mount_path = mount_path
+        self.fuse_obj = fusebase.GDBFSFuse('./GDBFS_root', self.mount_path)
 
     def run(self):
-        fusebase.mount_gdbfs(self.mount_path)
+        FUSE(self.fuse_obj, self.mount_path, foreground=True)
 
 
 fuse_process = None
