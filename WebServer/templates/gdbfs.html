@@ -27,9 +27,19 @@
 </head>
 <body>
 
+<table>
+  <tr>
+    <td>
+      <form action="/umount">
+        <button id="umount">卸载</button>
+      </form>
+    </td>
+    <td>
+      <button id="addFileButton">添加文件</button>
+    </td>
+  </tr>
+</table>
 
-<button id="umount">卸载</button>
-<button id="addFileButton">添加文件</button>
 
 <table border="1" width=100% id="opTable">
   <!-- 查找操作表 -->
@@ -239,22 +249,6 @@ $("#deleteButton").click(function () {
       },
       success: function (data) {
         alert(`${data['path']} is removed!`)
-      },
-  })
-})
-</script>
-
-<!-- 卸载文件系统 -->
-<script>
-$("#umount").click(function () {
-  console.log("开始卸载")
-  $.ajax({
-      url: '/umount',
-      type: 'post',
-      data: {
-      },
-      success: function (data) {
-        console.log("卸载!")
       },
   })
 })

@@ -129,4 +129,4 @@ def umount(request):
             os.system("umount {}".format(settings.fuse_process.mount_path))
     except AttributeError:
         pass
-    return JsonResponse({})
+    return render(request, 'home.html')
