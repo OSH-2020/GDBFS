@@ -177,6 +177,12 @@ class GDBFSFuse(Operations):
 
 
 def mount_gdbfs(mount_point):
+    root = os.path.realpath(__file__) + '/../GDBFS_root'
+    if not os.access(root, os.F_OK):
+        os.makedirs(root)
+    mount_point = os.path.realpath(mount_point)
+    if not os.access(mount_point, os.F_OK):
+        os.makedirs(mount_point)
     FUSE(GDBFSFuse(os.path.realpath(__file__) + '/../GDBFS_root', mount_point), mount_point, foreground=True)
 
 
