@@ -128,10 +128,17 @@ STATICFILES_DIRS = [
 
 
 class FuseProcess(Process):
-    def __init__(self, mount_path=os.path.realpath(__file__) + '/../mnt'):
+    def __init__(self, mount_path=os.path.dirname(os.path.realpath(__file__)) + '/../mnt'):
         super().__init__()
         self.mount_path = mount_path
-        self.fuse_obj = fusebase.GDBFSFuse('./GDBFS_root', self.mount_path)
+        # Set the root as '../GDBFS_root'
+        self.root = os.path.dirname(os.path.realpath(__file__)) + '/../GDBFS_root'
+        if not os.access(self.root, os.F_OK):
+            os.makedirs(self.root)
+        # create the mnt path if not existing
+        if not os.access(self.mount_path, os.F_OK):
+            os.makedirs(self.mount_path)
+        self.fuse_obj = fusebase.GDBFSFuse(self.root, self.mount_path)
 
     def run(self):
         FUSE(self.fuse_obj, self.mount_path, foreground=True)
