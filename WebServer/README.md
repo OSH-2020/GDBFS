@@ -11,19 +11,13 @@
 
 ## Step-by-Step Usage
 
-### Onestep
-
-只需要执行`python3 start.py`即可启动服务,通过浏览器访问http://localhost:8000/home即可
-
 ### Start Up
 
-首先, 你需要打开该项目的Django服务器.
+执行./setup.sh安装该项目必需的包
 
-```shell script
-python manage.py runserver 0.0.0.0:8000
-```
+执行`python3 start.py`打开该项目的Django服务器.
 
-然后你就可以通过浏览器访问主界面(http://localhost:8000/home).
+通过浏览器访问主界面(http://localhost:8000/home).
 
 ### Mount GDBFS
 
