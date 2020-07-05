@@ -20,7 +20,7 @@ def main(yourkey, atime, ctime, mtime):
     neo4j_txt.push_into(graph)
     # Note that this picture processing costs much time.
     '''
-    cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
+    cat_jpeg = neobase.FileNode(r'sample_files/cat.jpg')
     cat_jpeg.update_info()
     cat_jpeg.push_into(graph)
     '''
@@ -45,7 +45,10 @@ def main(yourkey, atime, ctime, mtime):
                                                   'aTime': search_key.atime,
                                                   'mTime': search_key.mtime})
     pprint("We've found this for you:")
-    pprint(neo4jtxt[0].node)
+    if len(neo4jtxt) == 0:
+        print("Nothing Found")
+    else:
+        pprint(neo4jtxt[0].node)
 
 
 if __name__ == '__main__':
