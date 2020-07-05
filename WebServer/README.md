@@ -11,6 +11,10 @@
 
 ## Step-by-Step Usage
 
+### Onestep
+
+只需要执行`python3 start.py`即可启动服务,通过浏览器访问http://localhost:8000/home即可
+
 ### Start Up
 
 首先, 你需要打开该项目的Django服务器.
