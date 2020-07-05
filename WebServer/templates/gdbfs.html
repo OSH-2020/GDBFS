@@ -48,6 +48,9 @@
     <td>
       <button id="addFileButton">添加文件</button>
     </td>
+    <td>
+      <button id="addFolderButton">添加文件夹</button>
+    </td>
   </tr>
 </table>
 
@@ -236,6 +239,22 @@ $("#findByNameButton").click(function () {
             for(var path of paths) {
               alert(`成功添加文件:\n${path}`)
             }
+          },
+      })
+  })
+  </script>
+
+<!-- 添加文件夹 -->
+<script>
+  $("#addFolderButton").click(function () {
+      $.ajax({
+          url: '/add_folder',
+          type: 'post',
+          data: {
+          },
+          success: function (data) {
+            if(data['paths'] != '')
+              alert(`成功添加文件夹:\n${data['paths']}`)
           },
       })
   })

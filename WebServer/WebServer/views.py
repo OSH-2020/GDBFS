@@ -115,3 +115,12 @@ def umount(request):
     except AttributeError:
         pass
     return render(request, 'home.html')
+
+
+def add_folder(request):
+    root = tk.Tk()
+    root.withdraw()
+    path = filedialog.askdirectory()
+    root.destroy()
+    os.system('cp -r {} {}'.format(path, settings.fuse_process.fuse_obj.mount_point))
+    return JsonResponse({'paths': path})
