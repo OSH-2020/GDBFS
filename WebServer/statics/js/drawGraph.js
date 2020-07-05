@@ -224,7 +224,7 @@ function listFileNodes(nodes) {
     for(var i = 0; i < fileNodes.length; i++) {
         tr = $("<tr>")
         for(var key of fileInfoKey) {
-            var td = $("<td></td>")
+            var td = $(`<td id = ${key}></td>`)
                 .addClass("mytd")
                 .text(fileNodes[i][key])
                 .width(fileInfoKeyScale[key])
@@ -239,6 +239,13 @@ function listFileNodes(nodes) {
             .css("font-size", "16px")
             .css("background-color", "#ffffd9")
             .css("border", "1px solid white"))
+            .on("click", function(tr){
+                var i = 0
+                for (var key of fileInfoKey) {
+                    d3.select(`#${key}Info`).text($(this).find(`#${key}`).text())
+                    i++
+                }
+            })
         fileTable.append(tr)
     }
 }
