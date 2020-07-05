@@ -14,6 +14,7 @@ def get_keywords(filepath, filename_extension=None):
         logging.debug("%s can't be extracted by photo_extraction, filename_extension is %s", filepath, filename_extension)
         return {}
     request_url = "https://aip.baidubce.com/rest/2.0/image-classify/v2/advanced_general"
+    keywords_final = {}
     try:
         # 二进制方式打开文件
         with open(filepath, 'rb') as f:
@@ -26,7 +27,6 @@ def get_keywords(filepath, filename_extension=None):
             request_url = request_url + "?access_token=" + access_token
             headers = {'content-type': 'application/x-www-form-urlencoded'}
             response = requests.post(request_url, data=params, headers=headers)
-
             # 判断网络是否出现异常
             if response.status_code == 200:
                 # 格式转换
@@ -35,7 +35,6 @@ def get_keywords(filepath, filename_extension=None):
                 keywords = result_dictType['result']
                 logging.debug("baidu:online api get Chinese keywords %s", keywords)
                 # 统一数据结构
-                keywords_final = {}
                 cur_pos = 0
                 for i in range(length):
                     # 把中文内容翻译成英文
@@ -48,7 +47,6 @@ def get_keywords(filepath, filename_extension=None):
                 logging.debug("baidu:online api get English keywords %s", keywords_final)
             else:
                 logging.error("baidu:online api network error with %d", response.status_code)
-                keywords_final = {}
     except IOError:
         logging.error("baidu:can't open file %s", filepath)
     return keywords_final

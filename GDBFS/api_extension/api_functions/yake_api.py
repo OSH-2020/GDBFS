@@ -36,6 +36,7 @@ def get_keywords(filepath, filename_extension=None):
 def extract_keywords(text):
     # 选择 state = 1 离线api，state = 0 使用在线api
     state = 1
+    keywords_final = {}
     # 提取关键字 offline
     if state == 1:
         try:
@@ -43,14 +44,12 @@ def extract_keywords(text):
             keywords = kw_extractor.extract_keywords(text)
             # 统一数据结构
             length = len(keywords)
-            keywords_final = {}
             for i in range(length):
                 unit = {keywords[i][1]: keywords[i][0]}
                 keywords_final.update(unit)
             logging.debug("yake:local api get keywords %s", keywords_final)
         except Exception as err:
             logging.error("yake:local api unexpect error: %s", err)
-            keywords_final = {}
     # 提取关键字 online
     else:
         try:
@@ -60,19 +59,16 @@ def extract_keywords(text):
             # 判断网络是否出现异常
             if result_jsonType.status_code != 200:
                 logging.error("yake:online api network error with %d", result_jsonType.status_code)
-                keywords_final = {}
             else:
                 logging.info("yake:online api success")
                 result_dictType = json.loads(result_jsonType.text)
                 keywords = result_dictType["keywords"]
                 # 统一数据结构
                 length = len(keywords)
-                keywords_final = {}
                 for i in range(length):
                     unit = {keywords[i]["ngram"]: keywords[i]["score"]}
                     keywords_final.update(unit)
                 logging.debug("yake:online api get keywords %s", keywords_final)
         except Exception as err:
             logging.error("yake:online api unexpect error: %s", err)
-            keywords_final = {}
     return keywords_final
