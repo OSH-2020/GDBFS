@@ -52,37 +52,50 @@
 
 
 <table border="1" width=100% id="opTable">
-  <!-- 查找操作表 -->
-  <tr><td width="30%">
-    <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
-    
-    <form id="inputForm" target="submitFrame"><fieldset>
-        {% csrf_token %}
-        <legend>查找文件</legend>
-        <table>
-            <tr>
-                <td>需操作的文件的描述</td>
-                <td><input type="text" name="description" id="description"/></td>
-            </tr>
-            <tr>
-                <td>ctime</td>
-                <td><input type="text" name="ctime" id="ctime"/></td>
-            </tr>
-            <tr>
-                <td>atime</td>
-                <td><input type="text" name="atime" id="atime"/></td>
-            </tr>
-            <tr>
-                <td>mtime</td>
-                <td><input type="text" name="mtime" id="mtime"/></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <button id="findButton" onclick="return false;">find</button>
-                </td>
-            </tr>
-        </table>
-    </fieldset></form></td>
+  <tr>
+    <td width="30%">
+      <table>
+        <!-- 按模糊信息查找操作表 -->
+        <tr><td colspan="4" style="width: 100%;">
+          <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
+          
+          <form id="inputForm" target="submitFrame"><fieldset>
+              {% csrf_token %}
+              <legend>查找文件</legend>
+              <table>
+                  <tr>
+                      <td>需操作的文件的描述</td>
+                      <td><input type="text" name="description" id="description"/></td>
+                  </tr>
+                  <tr>
+                      <td>ctime</td>
+                      <td><input type="text" name="ctime" id="ctime"/></td>
+                  </tr>
+                  <tr>
+                      <td>atime</td>
+                      <td><input type="text" name="atime" id="atime"/></td>
+                  </tr>
+                  <tr>
+                      <td>mtime</td>
+                      <td><input type="text" name="mtime" id="mtime"/></td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <button id="findButton" onclick="return false;">find</button>
+                      </td>
+                  </tr>
+              </table>
+          </fieldset></form>
+        </td></tr>
+        <tr>
+          <td>
+            <td>Name: </td>
+            <td><input type="text" id="fileNameToFind"/></td>
+            <td><input type="button" value="按文件名查找" id="findByNameButton"/></td>
+          </td>
+        </tr>
+      </table>
+    </td>
 
     <!-- 文件列表表格 -->
     <td width="70%">
@@ -180,6 +193,26 @@ $("#findButton").click(function () {
           ctime: $("#ctime").val(),
           mtime: $("#mtime").val(),
           atime: $("#atime").val(),
+        },
+        success: function (data) {
+          listFileNodes(data['nodes']);
+          draw(data['nodes'], data['edges']);
+        },
+    })
+})
+</script>
+
+<!-- 按文件名查找文件 -->
+<script>
+$("#findByNameButton").click(function () {
+    d3.select("svg")
+      .selectAll("*")
+      .remove();
+    $.ajax({
+        url: '/find_files_by_name',
+        type: 'post',
+        data: {
+          name: $("#fileNameToFind").val(),
         },
         success: function (data) {
           listFileNodes(data['nodes']);

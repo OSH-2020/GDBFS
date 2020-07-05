@@ -7,6 +7,7 @@ import os
 import logging
 import re
 
+
 class FileNode:
     RELATES_TO = Relationship.type('RELATES_TO')
     property_keys = {'name', 'path', 'cTime', 'mTime', 'aTime', 'size'}
@@ -146,8 +147,10 @@ WHERE ID(f) = {id}
 
     @staticmethod
     def from_record(record):
-        keys = record['keys']
-        node = record['f']
+        keys = record.get('keys', default=set())
+        node = record.get('f')
+        if node is None:
+            return None
         file_node = FileNode(node=node, keywords=set(keys))
         return file_node
 
@@ -204,7 +207,24 @@ WHERE {key_constraint} {other_constraint}
     result = graph.run(cypher)
     file_nodes = []
     for record in result:
-        file_nodes.append(FileNode.from_record(record))
+        file_node = FileNode.from_record(record)
+        if file_node is not None:
+            file_nodes.append(FileNode.from_record(record))
+    return file_nodes
+
+
+def get_files_by_name(graph: Graph, name: str):
+    cypher = """
+MATCH (f: File {{name: {name}}})
+    WITH f
+        OPTIONAL MATCH (f)-->(k: Keyword)
+            RETURN f, COLLECT(k.name) AS keys""".format(name=cypher_repr(name))
+    result = graph.run(cypher)
+    file_nodes = []
+    for record in result:
+        file_node = FileNode.from_record(record)
+        if file_node is not None:
+            file_nodes.append(FileNode.from_record(record))
     return file_nodes
 
 
@@ -280,3 +300,27 @@ def convert_path(path: str, old_prefix: str, new_prefix: str) -> str:
     return re.sub(r'{}'.format(os.path.realpath(old_prefix)),
                   os.path.realpath(new_prefix),
                   path, count=1)
+
+
+def file_nodes_to_d3(file_nodes: list):
+    nodes = []
+    node_indexes = {}
+    edges = []
+    node_count = 0
+    for file_node in file_nodes:
+        file_node_as_dict = {'name': file_node.node['name'], 'label': 'File'}
+        file_node_as_dict.update(file_node.node)
+        file_node_as_dict['keywords'] = list(file_node.keywords)
+        nodes.append(file_node_as_dict)
+        node_indexes[file_node.node['path']] = node_count
+        node_count += 1
+        for keyword in file_node.keywords:
+            if {'name': keyword, 'label': 'Keyword'} not in nodes:
+                nodes.append({'name': keyword, 'label': 'Keyword'})
+                node_indexes[keyword] = node_count
+                node_count += 1
+            edges.append({'source': node_indexes[file_node.node['path']],
+                          'target': node_indexes[keyword],
+                          'relation': 'TO',
+                          'value': 1})
+    return {"nodes": nodes, "edges": edges}

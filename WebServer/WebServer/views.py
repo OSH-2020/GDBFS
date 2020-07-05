@@ -16,6 +16,7 @@ def gdbfs(request):
     try:
         if type(settings.fuse_process) == settings.FuseProcess:
             settings.fuse_process.terminate()
+            print("\n\numounting {}\n\n".format(settings.fuse_process.mount_path))
             os.system("umount {}".format(settings.fuse_process.mount_path))
     except AttributeError:
         pass
@@ -54,31 +55,15 @@ def find_files(request):
     if len(result) == 0:
         return JsonResponse({"nodes": [], "edges": []})
 
-    nodes = []
-    node_indexes = {}
-    edges = []
-    node_count = 0
-    for file_node in result:
-        file_node_as_dict = {'name': file_node.node['name'], 'label': 'File'}
-        file_node_as_dict.update(file_node.node)
-        file_node_as_dict['keywords'] = list(file_node.keywords)
-        nodes.append(file_node_as_dict)
-        node_indexes[file_node.node['path']] = node_count
-        node_count += 1
-        for keyword in file_node.keywords:
-            if {'name': keyword, 'label': 'Keyword'} not in nodes:
-                nodes.append({'name': keyword, 'label': 'Keyword'})
-                node_indexes[keyword] = node_count
-                node_count += 1
-            edges.append({'source': node_indexes[file_node.node['path']],
-                          'target': node_indexes[keyword],
-                          'relation': 'TO',
-                          'value': 1})
+    name_dict = neobase.file_nodes_to_d3(result)
+    return JsonResponse(name_dict)
 
-    name_dict = {"nodes": nodes, "edges": edges}
-    from pprint import pprint
-    pprint(nodes)
-    pprint(edges)
+
+def find_files_by_name(request):
+    name = request.POST.get('name')
+    graph = Graph("bolt://localhost:7687")
+    result = neobase.get_files_by_name(graph, name)
+    name_dict = neobase.file_nodes_to_d3(result)
     return JsonResponse(name_dict)
 
 
