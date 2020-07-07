@@ -155,7 +155,7 @@ mv neo4j.txt wtf.txt
 
 执行以下命令删除文件, 你会发现图数据库中对应结点(和关键词结点)也被删除了.
 ```shell script
-rm neo4j.txt
+rm wtf.txt
 ```
 
 #### 卸载GDBFS

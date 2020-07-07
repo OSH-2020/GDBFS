@@ -290,9 +290,16 @@ OPTIONAL MATCH (new)-[r: RELATES_TO]->(k:Keyword)
     return
     '''
     file_node = FileNode(old)
-    file_node.update_info(filename_extension_specified=os.path.splitext(new)[1][1:])
+    expand_name = os.path.splitext(new)[1]
+    if expand_name == '':
+        expand_name = os.path.splitext(old)[1]
+    expand_name = expand_name[1:]
+    print('using expand name: {}'.format(expand_name))
+    file_node.update_info(filename_extension_specified=expand_name)
     file_node.update_properties({'path': new, 'name': os.path.split(new)[1]})
     file_node.update_relationships()
+    print(file_node.node)
+    print(file_node.keywords)
     file_node.push_into(graph)
 
 

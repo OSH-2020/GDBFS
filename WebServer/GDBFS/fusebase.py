@@ -187,4 +187,4 @@ def mount_gdbfs(mount_point):
 
 
 if __name__ == '__main__':
-    mount_gdbfs('mnt')
+    mount_gdbfs('../mnt')
