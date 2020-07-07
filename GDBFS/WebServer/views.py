@@ -85,7 +85,7 @@ def rm_file(request):
                                 settings.fuse_process.fuse_obj.root,
                                 settings.fuse_process.fuse_obj.mount_point)
     os.system("rm {}".format(path))
-    return JsonResponse({'path': path})
+    return find_files(request)
 
 
 def choose_dir(request):

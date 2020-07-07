@@ -15,9 +15,11 @@ var fileInfoKeyScale = {'name': "10%", 'keywords': "30%",
 
 // 声明一个力导向图
 var forceSimulation;
+nodes = []
+edges = []
 
 // 绘制函数
-function draw(nodes, edges) {
+function draw() {
     // 新建一个力导向图
     forceSimulation = d3.forceSimulation()
         .force("link", d3.forceLink())
@@ -69,6 +71,7 @@ function draw(nodes, edges) {
         .distance(function(d){//每一边的长度
             return d.value*3*NODE_SIZE;
         })
+        
     // 设置图形的中心位置
     forceSimulation.force("center")
         .x(width/2)
@@ -207,7 +210,7 @@ function draw(nodes, edges) {
     }
 }
 
-function listFileNodes(nodes) {
+function listFileNodes() {
     fileNodes = []
     for(let item of nodes) {
         if(item['label'] == 'File') {
@@ -247,5 +250,11 @@ function listFileNodes(nodes) {
                 }
             })
         fileTable.append(tr)
+    }
+}
+
+function clearFileInfo() {
+    for (var key of fileInfoKey) {
+        d3.select(`#${key}Info`).text('')
     }
 }
