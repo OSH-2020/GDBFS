@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Home</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    	<link rel="stylesheet" href="../statics/css/main.css" />
+    </head>
+    <body class="landing is-preload">
+        <div id="page-wrapper">
+            <section id="cta">
+                <h1><b>Welcome  to  Use  GDBFS</b></h1>
+                <h3>Please choose your mount point!</h3>
+                <form action="/gdbfs" method="POST">
+                    <div class="row gtr-50 gtr-uniform">
+                        <div class="col-6 col-12-mobilep">
+                            <input type="text" id="pathText" name="path" placeholder="Mount Path"/>
+                        </div>
+	                    <div class="col-3 off-2-mobilep" > 
+                            <input type="button" value="browse" class="fit" id="chooseDirButton"/>
+                        </div>
+                        <div class="col-3 col-12-mobilep">
+                            <input type="submit" value="Enter!"/>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </div>
+
+        <script>
+        // 响应 browse 按钮
+        $("#chooseDirButton").click(function () {
+            $.ajax({
+                url: '/choose_dir',
+                type: 'post',
+                data: {
+                },
+                success: function (data) {
+                    console.log(data['path'])
+                    console.log($("#pathText"))
+                    $("#pathText").val(data['path'])
+                },
+            })
+        })
+        </script>
+
+    </body>
+</html>
