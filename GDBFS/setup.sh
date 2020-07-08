@@ -1,4 +1,5 @@
 #!/bin/bash
+sudo apt-get install python3-tk
 sudo pip3 install yake
 sudo pip3 install python-docx
 sudo pip3 install geopy
