@@ -4,9 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GDBFS</title>
-    <script src="statics/js/jquery-3.5.1.js"></script>
-    <script src="statics/js/d3.js"></script>
-    <script src="statics/js/drawGraph.js"></script>
+    <script src="/statics/js/jquery-3.5.1.js"></script>
+    <script src="/statics/js/d3.js"></script>
+    <script src="/statics/js/drawGraph.js"></script>
     <link type="text/css" href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
     <link type="text/css" href="bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link type="text/css" href="css/theme.css" rel="stylesheet">
@@ -58,88 +58,227 @@
       </div>
       <!-- /navbar-inner -->
     </div>
-    <!--顶栏卸载和添加-->
+    <!-- /navbar -->
+  <!--顶栏卸载和添加-->
 
-
-<table border="1" width=100% id="opTable">
-  <tr>
-    <td width="30%">
-      <table>
-        <!-- 按模糊信息查找操作表 -->
-        <tr><td colspan="4" style="width: 100%;">
-          <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
-          
-          <form id="inputForm" target="submitFrame"><fieldset>
+<div class="wrapper">
+  <div class="container">
+  <div class="row">
+  <!--这三个div还没有结尾-->
+  <table class="span3 sidebar widget widget-menu unstyled" id="opTable">
+    <tr>
+      <td >
+        <table>
+          <!-- 按模糊信息查找操作表 -->
+          <tr><td >
+            <iframe id="submitFrame" style="display: none; width:100%; height:100%" name="submitFrame" src="about:blank"></iframe>
+            <form id="inputForm" target="submitFrame"><fieldset>
               {% csrf_token %}
               <legend>查找文件</legend>
               <table>
                   <tr>
-                      <td>需操作的文件的描述</td>
-                      <td><input type="text" name="description" id="description"/></td>
-                  </tr>
-                  <tr>
-                      <td>ctime</td>
-                      <td><input type="text" name="ctime" id="ctime"/></td>
-                  </tr>
-                  <tr>
-                      <td>atime</td>
-                      <td><input type="text" name="atime" id="atime"/></td>
-                  </tr>
-                  <tr>
-                      <td>mtime</td>
-                      <td><input type="text" name="mtime" id="mtime"/></td>
+                      <td>
+                        <input type="text" name="description" placeholder="需操作的文件的描述" id="description"/>
+                      </td>
                   </tr>
                   <tr>
                       <td>
-                          <button id="findButton" onclick="return false;">find</button>
+                        <input type="text" name="ctime" id="ctime" placeholder="ctime"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <input type="text" name="atime" id="atime" placeholder="atime"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                        <input type="text" name="mtime" id="mtime" placeholder="mtime"/>
+                      </td>
+                  </tr>
+                  <tr>
+                      <td>
+                          <button id="findButton" class="btn btn-large btn-info" onclick="return false;">find</button>
                       </td>
                   </tr>
               </table>
-          </fieldset></form>
-        </td></tr>
-        <tr>
-          <td>
-            <td>Name: </td>
-            <td><input type="text" id="fileNameToFind"/></td>
-            <td><input type="button" value="按文件名查找" id="findByNameButton"/></td>
-          </td>
-        </tr>
-      </table>
-    </td>
+            </fieldset></form>
+          </td></tr>
+          <!--end of 模糊查找那里-->
+          <tr class="navbar-search input-append">
+            <td>
+              <input type="text" placeholder="Filename:" id="fileNameToFind"/>
+            </td>
+            <td>
+              <input type="button" class="btn btn-large btn-info" value="find" id="findByNameButton"/>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- 查询文件列表表格 -->
+  <div class="span8">
+  <div class="content">
+  <div class="module">
+    <div class="module-head">
+      <h3>查询结果列表</h3>
+    </div>
+    <div class="module-body table">
+    <table style="BORDER-COLLAPSE: collapse" cellspacing="0" cellpadding="0" border="0" class="datatable-1 table table-bordered table-striped	 display" id="fileTable" width="100%">
+        <thead>
+                                            <tr>
+                                                <th>name</th>
+                                                <th>keywords</th>
+                                                <th>atime</th>
+                                                <th>ctime</th>
+                                                <th>mtime</th>
+                                                <th>size</th>
+                                                <th>path</th>
+                                            </tr>
+            </thead>
+        
+    </table>
+    </div>
+  </div>
+  <!--end of 查询结果module-->
+  
+                            <div class="module">
+                                <div class="module-head">
+                                    <h3>Your File Nodes</h3>
+                                </div>
+                                <div class="module-body">
+                                    <svg height="500"></svg>
+                                </div>
+                            </div>
+                            <!--画图结束-->
+                            <div class="module">
+                                <div class="module-head">
+                                    <h3>当前文件信息</h3>
+                                </div>
+                                <div class="module-body table">
+                                    <table cellpadding="0" cellspacing="0" border="0" class="datatable-1 table table-bordered table-striped	 display"
+                                        width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    Rendering engine
+                                                </th>
+                                                <th>
+                                                    Browser
+                                                </th>
+                                                <th>
+                                                    Platform(s)
+                                                </th>
+                                                <th>
+                                                    Engine version
+                                                </th>
+                                                <th>
+                                                    CSS grade
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="odd gradeA">
+                                                <td>
+                                                    Trident
+                                                </td>
+                                                <td>
+                                                    Internet Explorer 5.5
+                                                </td>
+                                                <td>
+                                                    Win 95+
+                                                </td>
+                                                <td class="center">
+                                                    5.5
+                                                </td>
+                                                <td class="center">
+                                                    A
+                                                </td>
+                                            </tr>
+                                            <tr class="even gradeA">
+                                                <td>
+                                                    Trident
+                                                </td>
+                                                <td>
+                                                    Internet Explorer 6
+                                                </td>
+                                                <td>
+                                                    Win 98+
+                                                </td>
+                                                <td class="center">
+                                                    6
+                                                </td>
+                                                <td class="center">
+                                                    A
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr class="gradeX">
+                                                <td>
+                                                    Misc
+                                                </td>
+                                                <td>
+                                                    Links
+                                                </td>
+                                                <td>
+                                                    Text only
+                                                </td>
+                                                <td class="center">
+                                                    -
+                                                </td>
+                                                <td class="center">
+                                                    X
+                                                </td>
+                                            </tr>
+                                            <tr class="gradeX">
+                                                <td>
+                                                    Misc
+                                                </td>
+                                                <td>
+                                                    Lynx
+                                                </td>
+                                                <td>
+                                                    Text only
+                                                </td>
+                                                <td class="center">
+                                                    -
+                                                </td>
+                                                <td class="center">
+                                                    X
+                                                </td>
+                                            </tr>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <!--/.module-->
+                        </div>
+                        <!--/.content-->
+                    </div>
+                    <!--/.span9-->
+                </div>
+                <!--row-->
+            </div>
+            <!--/.container-->
+        </div>
+        <!--/.wrapper-->
+        <div class="footer">
+            <div class="container">
+                <b class="copyright">&copy; OSH-2020/x-code-nowww </b>All rights reserved.
+            </div>
+        </div>
 
-    <!-- 文件列表表格 -->
-    <td width="70%">
-    <table style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 border=0 style="width: 100%; height: 100%;">
-      <tr>
-        <td>
-          <table cellSpacing=1 cellPadding=0 width="100%" style="align-self: center; border: 1px;">
-              <tr>
-                <td bgColor=#000080 colSpan=8 style="font-size: 16; color: white; text-align: center;">文件列表</td>
-              </tr>
-              <tr>
-                <td width="10%" bgColor=#6c95d0 style="font-size: 16;">name</td>
-                <td width="30%" bgColor=#6c95d0 style="font-size: 16;">keywords</td>
-                <td width="11%" bgColor=#6c95d0 style="font-size: 16;">atime</td>
-                <td width="11%" bgColor=#6c95d0 style="font-size: 16;">ctime</td>
-                <td width="11%" bgColor=#6c95d0 style="font-size: 16;">mtime</td>
-                <td width="5%" bgColor=#6c95d0 style="font-size: 16;">size</td>
-                <td width="21%" bgColor=#6c95d0 style="font-size: 16;">path</td>
-                <td width="1%" bgColor=#6c95d0></td>
-              </tr>
-            </TABLE>
-        </td>
-      </tr>
-      <tr>
-        <td>
-            <DIV style="OVERFLOW: auto; WIDTH: 100%; HEIGHT: 200px;">
-              <TABLE style="BORDER-COLLAPSE: collapse" cellSpacing=1 cellPadding=0 width="100%" id="fileTable" class="mytable">
-              </TABLE>
-            </DIV>
-        </td>
-      </tr>
-    </TABLE></td>
-  </tr>
-</table>
+
+
+
+
+
+
+
+
+
 
 <table border="1" width="100%">
   <tr>
