@@ -902,13 +902,13 @@ filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='@topColor', end
 	 
 	margin-right: 10px;
 	 
-	color: #767676;
+	color: #fbfdff;
 	 -webkit-transition: all .2s ease-in-out;
 -moz-transition: all .2s ease-in-out;
 transition: all .2s ease-in-out;
 }
 .widget-menu .label {
-	background: #888;
+	background: rgb(242, 245, 253);
 	-webkit-box-shadow: 0 0 2px rgba(0,0,0,0.4) inset;
 	-moz-box-shadow: 0 0 2px rgba(0,0,0,0.4) inset;
 	box-shadow: 0 0 2px rgba(0,0,0,0.4) inset;
@@ -928,8 +928,8 @@ transition: all .2s ease-in-out;
 	border-top: 1px solid #555
 }
 .widget-menu>li>a {
-	background-color: #2d2b32;
-	color: #767676;
+	background-color: #529cbe;
+	color: #f2f4f5;
 	-webkit-transition: all .2s ease-in-out;
 -moz-transition: all .2s ease-in-out;
 transition: all .2s ease-in-out;

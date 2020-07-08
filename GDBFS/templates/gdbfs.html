@@ -114,8 +114,8 @@
             <td>
               <input type="text" placeholder="Filename:" id="fileNameToFind"/>
             </td>
-            </tr>
-            <tr>
+          </tr>
+          <tr>
             <td>
               <input type="button" class="pull-right btn btn-large btn-info" value="find by name" id="findByNameButton"/>
             </td>
@@ -130,18 +130,35 @@
   <!--操作当前文件-->
   <div class="module">
   <div class="module-head">
-    <h4>操作当前文件</h4>
+    <h3>操作当前文件</h3>
   </div>
-  <table class="module body ">
+  <div class="module body ">
     
-        <tr>
-            <button id="openButton" class="btn btn-large btn-primary" onclick="return false;">打开</button>
-        </tr>
-        <tr>
-            <button id="deleteButton" class="btn btn-large btn-primary" onclick="return false;">删除</button>
-        </tr>
-    
-  </table>
+    <ul class="widget widget-menu unstyled">
+                                
+                                <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
+                                <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
+                                <li><a href="table.html"><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>
+                                <li><a class="collapsed" data-toggle="collapse" href="#togglePages"><i class="menu-icon icon-paste">
+                                </i><i class="icon-chevron-down pull-right"></i><i class="icon-chevron-up pull-right">
+                                </i>重命名当前文件</a>
+                                    <ul id="togglePages" class="collapse unstyled">
+                                    <table>
+                                        <tr>
+            <td>
+              <input type="text" placeholder="Newname:" />
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="button" class="pull-right btn btn-large btn-info" value="重命名"/>
+            </td>
+          </tr>
+        </table>
+                                    </ul>
+                                </li>
+                            </ul>
+  </div>
   </div>
   <!--end of module2-->
     </div>
