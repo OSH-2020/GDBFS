@@ -177,21 +177,13 @@ class GDBFSFuse(Operations):
 
 
 def mount_gdbfs(mount_point):
-<<<<<<< HEAD:WebServer/GDBFS/fusebase.py
-    root = os.path.realpath(__file__) + '/../GDBFS_root'
-=======
     root = os.path.dirname(os.path.realpath(__file__)) + '/../GDBFS_root'
->>>>>>> 59770fb5d70835aa800fb817e58d2fbc8cfc1745:GDBFS/core/fusebase.py
     if not os.access(root, os.F_OK):
         os.makedirs(root)
     mount_point = os.path.realpath(mount_point)
     if not os.access(mount_point, os.F_OK):
         os.makedirs(mount_point)
-<<<<<<< HEAD:WebServer/GDBFS/fusebase.py
-    FUSE(GDBFSFuse(os.path.realpath(__file__) + '/../GDBFS_root', mount_point), mount_point, foreground=True)
-=======
     FUSE(GDBFSFuse(root, mount_point), mount_point, foreground=True)
->>>>>>> 59770fb5d70835aa800fb817e58d2fbc8cfc1745:GDBFS/core/fusebase.py
 
 
 if __name__ == '__main__':
