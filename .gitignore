@@ -4,6 +4,7 @@ sample/*
 !GDBFS/core/README.md
 !GDBFS/core/neobase.py
 !GDBFS/core/sample.py
+!GDBFS/core/cmd.py
 !GDBFS/core/UsrInputConv.py
 !GDBFS/core/api_extension
 GDBFS/core/api_extension/*

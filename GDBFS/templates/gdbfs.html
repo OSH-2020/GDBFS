@@ -189,18 +189,24 @@ $("#findButton").click(function () {
     d3.select("svg")
       .selectAll("*")
       .remove();
+    window.description = $("#description").val(),
+    window.ctime = $("#ctime").val(),
+    window.mtime = $("#mtime").val(),
+    window.atime = $("#atime").val(),
     $.ajax({
         url: '/find_files',
         type: 'post',
         data: {
-          description: $("#description").val(),
-          ctime: $("#ctime").val(),
-          mtime: $("#mtime").val(),
-          atime: $("#atime").val(),
+          description: window.description,
+          ctime: window.ctime,
+          mtime: window.mtime,
+          atime: window.atime,
         },
         success: function (data) {
-          listFileNodes(data['nodes']);
-          draw(data['nodes'], data['edges']);
+          nodes = data['nodes']
+          edges = data['edges']
+          listFileNodes()
+          draw();
         },
     })
 })
@@ -219,8 +225,10 @@ $("#findByNameButton").click(function () {
           name: $("#fileNameToFind").val(),
         },
         success: function (data) {
-          listFileNodes(data['nodes']);
-          draw(data['nodes'], data['edges']);
+          nodes = data['nodes']
+          edges = data['edges']
+          listFileNodes();
+          draw();
         },
     })
 })
@@ -291,10 +299,20 @@ $("#deleteButton").click(function () {
       url: '/rm_file',
       type: 'post',
       data: {
+        description: window.description,
+        ctime: window.ctime,
+        mtime: window.mtime,
+        atime: window.atime,
         path: path,
       },
       success: function (data) {
-        alert(`${data['path']} is removed!`)
+        nodes = data['nodes']
+        edges = data['edges']
+        draw()
+        listFileNodes()
+        console.log(data)
+        clearFileInfo()
+        alert(`${path} is removed!`)
       },
   })
 })
