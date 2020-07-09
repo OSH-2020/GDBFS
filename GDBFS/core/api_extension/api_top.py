@@ -35,7 +35,9 @@ def get_keywords_properties(filepath, keys_limit=-1, filename_extension_specifie
                 keywords = {**keywords, **module.get_keywords(filepath,filename_extension=filename_extension)}
             elif((attr[1] == 'properties') and (PM_code&2)):
                 properties = {**properties, **module.get_properties(filepath,filename_extension=filename_extension)}
-    return {'keywords': list(keywords.keys())[:keys_limit], 'properties': properties}
+    keywords_final = list(keywords.keys())[:keys_limit]
+    keywords_final += [filename_extension]
+    return {'keywords': keywords_final, 'properties': properties}
 
 
 if __name__ == "__main__":
