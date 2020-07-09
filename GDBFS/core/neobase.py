@@ -244,8 +244,9 @@ OPTIONAL MATCH (f)-[r: RELATES_TO]->(k:Keyword)
     WITH k
         WHERE NOT EXISTS((k) < --())
             DELETE k""".format(properties=cypher_repr(properties))
-    print(cypher)
+    #print(cypher)
     graph.run(cypher)
+    return True
 
 
 def rename_file(graph: Graph, old: str, new: str, light_rename=False):

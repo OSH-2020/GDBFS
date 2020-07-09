@@ -138,6 +138,7 @@
                                 
                                 <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
                                 <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
+                                <li><a type="button" id="deletedataButton" onclick="return false;"><i class="menu-icon icon-table"></i>仅删除数据库信息 </a></li>
                                 <li><a href={% url 'rename' %}><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>
                                 
                                 
@@ -388,6 +389,32 @@ $("#deleteButton").click(function () {
         console.log(data)
         clearFileInfo()
         alert(`${path} is removed!`)
+      },
+  })
+})
+</script>
+
+<!-- 删除数据库 -->
+<script>
+$("#deletedataButton").click(function () {
+  path = d3.select("#pathInfo").text()
+  console.log(path);
+  $.ajax({
+      url: '/rm_node',
+      type: 'post',
+      data: {
+        path: path,
+      },
+      success: function (data) {
+        
+        nodes = data['nodes']
+        edges = data['edges']
+        draw()
+        listFileNodes()
+        console.log(data)
+        clearFileInfo()
+        alert(`${path} node is removed!`)
+        }
       },
   })
 })

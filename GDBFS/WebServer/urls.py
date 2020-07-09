@@ -12,6 +12,7 @@ urlpatterns = [
     url(r'^open_file$', views.open_file, name='open_file'),
     url(r'^add_files$', views.add_files, name='add_files'),
     url(r'^rm_file$', views.rm_file, name='rm_file'),
+    url(r'^rm_node$', views.rm_node, name='rm_node'),
     url(r'^choose_dir$', views.choose_dir, name='choose_dir'),
     url(r'^umount$', views.umount, name='umount'),
     url(r'^add_folder$', views.add_folder, name='add_folder'),
