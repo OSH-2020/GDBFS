@@ -28,6 +28,8 @@ def gdbfs(request):
 def rename(request):
     return render(request, 'rename.html')
 
+def return_gdbfs(request):
+    return render(request,'gdbfs.html')
 
 def find_files(request):
     description = request.POST.get("description")
