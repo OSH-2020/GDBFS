@@ -75,15 +75,15 @@ def get_token():
                 '&client_secret=' + Secret_Key
             req = request.Request(host)
             response = request.urlopen(req, context=gcontext).read().decode('UTF-8')
-            if response.status_code == 200:
-                logging.info("baidu:successfully get token")
+            try:
                 result = json.loads(response)
                 token = result['access_token']
+                logging.info("baidu:successfully get token")
                 with open(os.path.split(__file__)[0] + '/token.txt', 'w', encoding='utf-8') as f:
                     f.write(token)
                 logging.info("baidu:write token to file successfully")
-            else:
-                logging.error("baidu:network error with: %d", response.status_code)
+            except AttributeError as e:
+                logging.error("baidu:network error with: %d", e)
     except IOError:
         logging.error("baidu:file open error!")
     return token
