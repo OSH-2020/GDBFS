@@ -25,6 +25,10 @@ def gdbfs(request):
     return render(request, 'gdbfs.html', {'mount_path': settings.fuse_process.fuse_obj.mount_point})
 
 
+def rename(request):
+    return render(request, 'rename.html')
+
+
 def find_files(request):
     description = request.POST.get("description")
     ctime = request.POST.get("ctime")

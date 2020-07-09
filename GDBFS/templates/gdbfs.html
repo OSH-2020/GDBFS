@@ -11,8 +11,8 @@
     <link type="text/css" href="../statics/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
     <link type="text/css" href="../statics/css/theme.css" rel="stylesheet">
     <link type="text/css" href="../statics/images/icons/css/font-awesome.css" rel="stylesheet">
-    <link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
-        rel='stylesheet'>
+    <!--link type="text/css" href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,600italic,400,600'
+        rel='stylesheet'-->
         
     <script>
     $.ajaxSetup({
@@ -138,7 +138,7 @@
                                 
                                 <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
                                 <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
-                                <li><a href="rename.html"><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>
+                                <li><a href={% url 'rename' %}><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>
                                 
                                 
                             </ul>
@@ -176,7 +176,7 @@
                             <div class="module">
                                 
                                 <div class="module-body">
-                                    <svg height="500" width="850" border="0"></svg>
+                                    <svg height="450" width="850" border="0"></svg>
                                 </div>
                             </div>
                             <!--画图结束-->

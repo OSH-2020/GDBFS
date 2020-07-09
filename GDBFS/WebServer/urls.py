@@ -5,6 +5,7 @@ from WebServer import views
 urlpatterns = [
     url(r'^home$', views.home),
     url(r'^gdbfs$', views.gdbfs),
+    path('rename/', views.rename, name='rename'),
     url(r'^find_files$', views.find_files, name='find_files'),
     url(r'^find_files_by_name$', views.find_files_by_name, name='find_files_by_name'),
     url(r'^open_file$', views.open_file, name='open_file'),
