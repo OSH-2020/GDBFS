@@ -1,4 +1,5 @@
 ﻿.vscode
+/WebServer/*
 GDBFS/core/*
 sample/*
 !GDBFS/core/README.md
