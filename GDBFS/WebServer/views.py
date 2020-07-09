@@ -94,6 +94,15 @@ def rm_file(request):
     return find_files(request)
 
 
+def rm_node(request):
+    path = request.POST.get('path')
+    graph = Graph("bolt://localhost:7687")
+    ok = True
+    if not neobase.delete_file(graph, path):
+        ok = False
+    return find_files(request)
+
+
 def choose_dir(request):
     root = tk.Tk()
     root.withdraw()
