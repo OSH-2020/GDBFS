@@ -5,7 +5,7 @@
         <title>Home</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
         <script src="../statics/js/jquery-3.5.1.js"></script>
-    	<link rel="stylesheet" href="css/main.css" />
+    	<link type="text/css" rel="stylesheet" href="../statics/css/main.css" />
         <script>
         $.ajaxSetup({
             data:{csrfmiddlewaretoken:'{{ csrf_token }}'}
@@ -15,7 +15,7 @@
     <body class="landing is-preload">
         <div id="page-wrapper">
             <section id="cta">
-                <h1><b>Welcome  to  Use  GDBFS</b></h1>
+                <h1>Welcome  to  Use  GDBFS</h1>
                 <h3>Please choose your mount point!</h3>
                 <form action="/gdbfs" method="POST">
                     {% csrf_token %}
