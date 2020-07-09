@@ -21,7 +21,7 @@ GDBFS/core/api_extension/api_functions/*
 !GDBFS/core/api_extension/api_functions/translate_api.py
 !GDBFS/core/api_extension/api_functions/file_information_extractor.py
 !GDBFS/core/api_extension/api_functions/__init__.py
-!GDBFS/core/sample_files
+GDBFS/core/sample_files
 !GDBFS/core/top.py
 !GDBFS/core/fusebase.py
 !sample/py2neo
