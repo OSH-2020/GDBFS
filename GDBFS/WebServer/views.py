@@ -100,7 +100,7 @@ def rm_node(request):
     ok = True
     if not neobase.delete_file(graph, path):
         ok = False
-    return find_files(request)
+    return JsonResponse({'ok': ok})
 
 
 def choose_dir(request):

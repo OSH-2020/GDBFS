@@ -406,14 +406,11 @@ $("#deletedataButton").click(function () {
         path: path,
       },
       success: function (data) {
-        
-        nodes = data['nodes']
-        edges = data['edges']
-        draw()
-        listFileNodes()
-        console.log(data)
-        clearFileInfo()
-        alert(`${path} node is removed!`)
+        if(data['ok'] == false) {
+          alert("找不到该节点")
+        }
+        if(data['ok'] == True) {
+          alert("删除数据库节点成功")
         }
       },
   })
