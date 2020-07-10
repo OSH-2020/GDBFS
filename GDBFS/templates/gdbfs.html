@@ -126,23 +126,59 @@
   </div>
   <!--end of module1-->
   <!--操作当前文件-->
-  <div class="module">
-  <div class="module-head">
-    <h3>操作当前文件</h3>
-  </div>
-  <div class="module body ">
-    
+  
+                            <div class="module">
+                                <div class="module-head">
+                                    <h3>当前文件信息</h3>
+                                </div>
+                                <div class="module-body table">
+                                    <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-striped	table-condensed display"
+                                       width="100%">
+                                      
+                                        <tbody>
+                                            <tr>
+                        <td style="width: 10%;">name</td>
+                        <td id="nameInfo"></td>
+                  </tr>
+                      <tr>
+              <td style="width: 10%;">keywords</td>
+              <td  id="keywordsInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">cTime</td>
+              <td style="width: 90%;" id="cTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">mTime</td>
+              <td style="width: 90%;" id="mTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">aTime</td>
+              <td style="width: 90%;" id="aTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">size</td>
+              <td style="width: 90%;" id="sizeInfo"></td>
+            </tr>
+            <tr hidden>
+              <td style="width: 10%;">path</td>
+              <td style="width: 90%;" id="pathInfo"></td>
+            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            <!--/.module-->
+ 
     <ul class="widget widget-menu unstyled">
                                 
-                                <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
-                                <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
-                                <li><a type="button" id="deletedataButton" onclick="return false;"><i class="menu-icon icon-table"></i>仅删除数据库信息 </a></li>
-                                <li><a href={% url 'rename' %}><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>
-                                
-                                
-                            </ul>
+                  <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
+                  <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
+                  <li><a type="button" id="deletedataButton" onclick="return false;"><i class="menu-icon icon-table"></i>仅删除数据库信息 </a></li>
+                  <li><a href={% url 'rename' %}><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>      
+           </ul>
   </div>
-  </div>
+  
   <!--end of module2-->
     </div>
                             <!--end of span3-->
@@ -191,51 +227,11 @@
                             <div class="module">
                                 
                                 <div class="module-body">
-                                    <svg height="400" width="850" border="0"></svg>
+                                    <svg height="600" width="850" border="0"></svg>
                                 </div>
                             </div>
                             <!--画图结束-->
-                            <div class="module">
-                                <div class="module-head">
-                                    <h3>当前文件信息</h3>
-                                </div>
-                                <div class="module-body table">
-                                    <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-striped	table-condensed display"
-                                        width="100%">
-                                      
-                                        <tbody>
-                                            <tr>
-                        <td style="width: 10%;">name</td>
-                        <td style="width: 90%;" id="nameInfo"></td>
-                  </tr>
-                      <tr>
-              <td style="width: 10%;">keywords</td>
-              <td style="width: 90%;" id="keywordsInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">cTime</td>
-              <td style="width: 90%;" id="cTimeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">mTime</td>
-              <td style="width: 90%;" id="mTimeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">aTime</td>
-              <td style="width: 90%;" id="aTimeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">size</td>
-              <td style="width: 90%;" id="sizeInfo"></td>
-            </tr>
-            <tr hidden>
-              <td style="width: 10%;">path</td>
-              <td style="width: 90%;" id="pathInfo"></td>
-            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+        
                             <!--/.module-->
                         </div>
                         <!--/.content-->
