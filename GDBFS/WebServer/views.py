@@ -118,7 +118,11 @@ def add_files(request):
     paths = filedialog.askopenfilenames()
     root.destroy()
     for path in paths:
-        os.system('cp {} {}'.format(path, settings.fuse_process.fuse_obj.mount_point))
+        full_path = os.path.realpath(settings.fuse_process.fuse_obj.mount_point + '/' + os.path.realpath(path))
+        print('\n\n', full_path, '\n\n')
+        os.makedirs(os.path.dirname(full_path))
+        os.system('cp {} {}'.format(path, full_path))
+
     return JsonResponse({'paths': paths})
 
 
