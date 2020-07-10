@@ -2,8 +2,6 @@ import sys
 import getopt
 import os
 import subprocess
-from . import neobase
-from . import fusebase
 
 
 def add(file:str, option:list):

@@ -227,6 +227,9 @@ function listFileNodes() {
     for(var i = 0; i < fileNodes.length; i++) {
         tr = $("<tr>")
         for(var key of fileInfoKey) {
+            if (key == 'path') {
+                continue
+            }
             var td = $(`<td id = ${key}></td>`)
                 .addClass("mytd")
                 .text(fileNodes[i][key])
@@ -247,9 +250,6 @@ function listFileNodes() {
                 for (var key of fileInfoKey) {
                     info = d3.select(`#${key}Info`)
                     info.text($(this).find(`#${key}`).text())
-                    if (key == 'path') {
-                        info.prop("hidden",true); 
-                    }
                     i++
                 }
             })
