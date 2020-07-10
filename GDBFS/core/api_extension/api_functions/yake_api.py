@@ -45,7 +45,7 @@ def extract_keywords(text):
             # 统一数据结构
             length = len(keywords)
             for i in range(length):
-                unit = {keywords[i][1]: keywords[i][0]}
+                unit = {keywords[i][1].strip("\n\t \r"): keywords[i][0]}
                 keywords_final.update(unit)
             logging.debug("yake:local api get keywords %s", keywords_final)
         except Exception as err:
@@ -66,7 +66,7 @@ def extract_keywords(text):
                 # 统一数据结构
                 length = len(keywords)
                 for i in range(length):
-                    unit = {keywords[i]["ngram"]: keywords[i]["score"]}
+                    unit = {keywords[i]["ngram"].strip("\n\t \r"): keywords[i]["score"]}
                     keywords_final.update(unit)
                 logging.debug("yake:online api get keywords %s", keywords_final)
         except Exception as err:
