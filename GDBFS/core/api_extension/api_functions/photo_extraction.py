@@ -41,7 +41,7 @@ def get_keywords(filepath, filename_extension=None):
                     en_keyword = translate_iciba_api(keywords[cur_pos]['keyword'])
                     if en_keyword is None:
                         continue
-                    unit = {en_keyword: keywords[cur_pos]['score']}
+                    unit = {en_keyword.strip("\n\t \r"): keywords[cur_pos]['score']}
                     keywords_final.update(unit)
                     cur_pos += 1
                 logging.debug("baidu:online api get English keywords %s", keywords_final)
