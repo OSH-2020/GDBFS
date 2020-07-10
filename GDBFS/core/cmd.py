@@ -2,6 +2,9 @@ import sys
 import getopt
 import os
 import subprocess
+from . import neobase
+from . import fusebase
+
 
 def add(file:str, option:list):
     """
@@ -13,6 +16,7 @@ def add(file:str, option:list):
     option.insert(0,cmd)
     subprocess.call(option,shell=True)
 
+
 def rm(file:str, option:list):
     """
     删除文件
@@ -22,6 +26,7 @@ def rm(file:str, option:list):
     cmd = "rm mnt/{file_name}".format(file_name= file)
     option.insert(0,cmd)
     subprocess.call(option,shell=True)
+
 
 def open(file:str, option:list):
     """
@@ -33,6 +38,13 @@ def open(file:str, option:list):
     option.insert(0,cmd)
     option.append('&')
     subprocess.call(option,shell=True)
+
+
+def init():
+    graph = Graph("bolt://localhost:7687")
+    neobase.init_database(graph)
+    fusebase.init_root()
+
 
 def main():
     if not os.path.exists('./mnt'):
@@ -68,9 +80,12 @@ def main():
         if(args[0] == 'add'):
             add(args[1], option)            
         elif(args[0] == 'rm'):
-            rm(args[1], option)           
+            rm(args[1], option)
         elif(args[0] == 'open'):
-            open(args[1], option)           
+            open(args[1], option)
+        elif(args[0] == 'init'):
+            init()
+                
 
 if __name__ == "__main__":
     main()

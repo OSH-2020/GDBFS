@@ -332,3 +332,8 @@ def file_nodes_to_d3(file_nodes: list):
                           'relation': 'TO',
                           'value': 1})
     return {"nodes": nodes, "edges": edges}
+
+
+def init_database(graph: Graph):
+    cypher = 'MATCH(N) DETACH DELETE N'
+    graph.run(cypher)
