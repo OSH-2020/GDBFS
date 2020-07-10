@@ -8,10 +8,10 @@ var BOARD_WIDTH = 5;
 var GRAPH_WIDTH = 960;
 var GRAPH_HEIGHT = 640;
 
-var fileInfoKey = ['name', 'keywords', 'aTime', 'cTime', 'mTime', 'size', 'path']
+var fileInfoKey = ['name', 'keywords', 'aTime', 'cTime', 'mTime', 'size'/*, 'path'*/]
 var fileInfoKeyScale = {'name': "10%", 'keywords': "30%",
     'aTime': "11%", 'cTime': "11%", 'mTime': "11%",
-    'size': "5%", 'path': "21%"}
+    'size': "5%"/*, 'path': "21%"*/}
 
 // 声明一个力导向图
 var forceSimulation;
