@@ -20,11 +20,7 @@ def main(yourkey, atime, ctime, mtime):
     neo4j_txt.push_into(graph)
     # Note that this picture processing costs much time.
     '''
-<<<<<<< HEAD:GDBFS/top.py
-    cat_jpeg = neobase.FileNode(r'sample_files/cat.jpeg')
-=======
     cat_jpeg = neobase.FileNode(r'sample_files/cat.jpg')
->>>>>>> 59770fb5d70835aa800fb817e58d2fbc8cfc1745:GDBFS/core/top.py
     cat_jpeg.update_info()
     cat_jpeg.push_into(graph)
     '''
@@ -49,14 +45,10 @@ def main(yourkey, atime, ctime, mtime):
                                                   'aTime': search_key.atime,
                                                   'mTime': search_key.mtime})
     pprint("We've found this for you:")
-<<<<<<< HEAD:GDBFS/top.py
-    pprint(neo4jtxt[0].node)
-=======
     if len(neo4jtxt) == 0:
         print("Nothing Found")
     else:
         pprint(neo4jtxt[0].node)
->>>>>>> 59770fb5d70835aa800fb817e58d2fbc8cfc1745:GDBFS/core/top.py
 
 
 if __name__ == '__main__':

@@ -4,6 +4,8 @@ from . import neobase
 from py2neo import *
 from fuse import FUSE, FuseOSError, Operations
 
+root = os.path.dirname(os.path.realpath(__file__)) + '/../GDBFS_root'
+
 
 class GDBFSFuse(Operations):
     def __init__(self, root, mount_point):
@@ -184,6 +186,12 @@ def mount_gdbfs(mount_point):
     if not os.access(mount_point, os.F_OK):
         os.makedirs(mount_point)
     FUSE(GDBFSFuse(root, mount_point), mount_point, foreground=True)
+
+
+def init_root():
+    root = os.path.realpath(os.path.dirname(os.path.realpath(__file__)) + '/../GDBFS_root')
+    os.system("rm -r {}/*".format(root))
+
 
 
 if __name__ == '__main__':

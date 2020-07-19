@@ -42,9 +42,15 @@
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".navbar-inverse-collapse">
             <i class="icon-reorder shaded"></i></a><a class="brand">GDBFS </a>
           <div class="nav-collapse collapse navbar-inverse-collapse">
+<<<<<<< HEAD
             <input type="text" class="span3" id='mountPath' value='{{ mount_path }}'>
             <form action="/umount">
               <input id="umount" type="submit" value="卸载" class="btn btn-large btn-info"/>
+=======
+            <form class="navbar-search pull-left input-append" action="/umount">  
+              <input type="text" class="span3" id='mountPath' value='{{ mount_path }}'>
+              <input class="btn btn-large btn-info" type="submit" name='sub' value="卸载" />
+>>>>>>> 5f6683dd5131a699c66720f24b9e80da42e82957
             </form>
             <form class="navbar-search pull-right input-append" action="#">
               <button id="addFileButton" class="btn btn-large btn-info" type="button">添加文件</button>
@@ -126,23 +132,59 @@
   </div>
   <!--end of module1-->
   <!--操作当前文件-->
-  <div class="module">
-  <div class="module-head">
-    <h3>操作当前文件</h3>
-  </div>
-  <div class="module body ">
-    
+  
+                            <div class="module">
+                                <div class="module-head">
+                                    <h3>当前文件信息</h3>
+                                </div>
+                                <div class="module-body table">
+                                    <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-striped	table-condensed display"
+                                       width="100%">
+                                      
+                                        <tbody>
+                                            <tr>
+                        <td style="width: 10%;">name</td>
+                        <td id="nameInfo"></td>
+                  </tr>
+                      <tr>
+              <td style="width: 10%;">keywords</td>
+              <td  id="keywordsInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">cTime</td>
+              <td style="width: 90%;" id="cTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">mTime</td>
+              <td style="width: 90%;" id="mTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">aTime</td>
+              <td style="width: 90%;" id="aTimeInfo"></td>
+            </tr>
+            <tr>
+              <td style="width: 10%;">size</td>
+              <td style="width: 90%;" id="sizeInfo"></td>
+            </tr>
+            <tr hidden>
+              <td style="width: 10%;">path</td>
+              <td style="width: 90%;" id="pathInfo"></td>
+            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            
+                            <!--/.module-->
+ 
     <ul class="widget widget-menu unstyled">
                                 
-                                <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
-                                <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
-                                <li><a type="button" id="deletedataButton" onclick="return false;"><i class="menu-icon icon-table"></i>仅删除数据库信息 </a></li>
-                                <li><a href={% url 'rename' %}><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>
-                                
-                                
-                            </ul>
+                  <li><a type="button" id="openButton" onclick="return false;"><i class="menu-icon icon-book"></i>打开当前文件 </a></li>
+                  <li><a type="button" id="deleteButton" onclick="return false;"><i class="menu-icon icon-inbox"></i>删除选中文件 </a></li>
+                  <li><a type="button" id="deletedataButton" onclick="return false;"><i class="menu-icon icon-table"></i>仅删除数据库信息 </a></li>
+                  <li><a href={% url 'rename' %}><i class="menu-icon icon-paste"></i>重命名当前文件 </a></li>      
+           </ul>
   </div>
-  </div>
+  
   <!--end of module2-->
     </div>
                             <!--end of span3-->
@@ -167,7 +209,7 @@
                 <td width="11%"  style="font-size: 16;">ctime</td>
                 <td width="11%" style="font-size: 16;">mtime</td>
                 <td width="5%" style="font-size: 16;">size</td>
-                <td width="21%"  style="font-size: 16;">path</td>
+                <td width="21%"  style="font-size: 16;" hidden>path</td>
                 <td width="1%"></td>
               </tr>
           </table>
@@ -191,51 +233,11 @@
                             <div class="module">
                                 
                                 <div class="module-body">
-                                    <svg height="400" width="850" border="0"></svg>
+                                    <svg height="600" width="850" border="0"></svg>
                                 </div>
                             </div>
                             <!--画图结束-->
-                            <div class="module">
-                                <div class="module-head">
-                                    <h3>当前文件信息</h3>
-                                </div>
-                                <div class="module-body table">
-                                    <table cellpadding="0" cellspacing="0" border="0" class="table table-bordered table-striped	table-condensed display"
-                                        width="100%">
-                                      
-                                        <tbody>
-                                            <tr>
-                        <td style="width: 10%;">name</td>
-                        <td style="width: 90%;" id="nameInfo"></td>
-                  </tr>
-                      <tr>
-              <td style="width: 10%;">keywords</td>
-              <td style="width: 90%;" id="keywordsInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">cTime</td>
-              <td style="width: 90%;" id="cTimeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">mTime</td>
-              <td style="width: 90%;" id="mTimeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">aTime</td>
-              <td style="width: 90%;" id="aTimeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">size</td>
-              <td style="width: 90%;" id="sizeInfo"></td>
-            </tr>
-            <tr>
-              <td style="width: 10%;">path</td>
-              <td style="width: 90%;" id="pathInfo"></td>
-            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+        
                             <!--/.module-->
                         </div>
                         <!--/.content-->
