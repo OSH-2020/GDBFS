@@ -13,6 +13,8 @@ def home(request):
 
 
 def gdbfs(request):
+    if request.POST.get('path') is None or request.POST.get('path') == '':
+        return render(request, 'gdbfs.html', {'mount_path': settings.fuse_process.fuse_obj.mount_point})
     try:
         if type(settings.fuse_process) == settings.FuseProcess:
             settings.fuse_process.terminate()
@@ -28,8 +30,10 @@ def gdbfs(request):
 def rename(request):
     return render(request, 'rename.html')
 
+
 def return_gdbfs(request):
-    return render(request,'gdbfs.html')
+    return render(request, 'gdbfs.html')
+
 
 def find_files(request):
     description = request.POST.get("description")
@@ -127,6 +131,7 @@ def add_files(request):
 
 
 def umount(request):
+    print(umount)
     try:
         if type(settings.fuse_process) == settings.FuseProcess:
             settings.fuse_process.terminate()
